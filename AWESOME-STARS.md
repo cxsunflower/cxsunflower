@@ -11,6 +11,7 @@
 - [Java](#java)
 - [Kotlin](#kotlin)
 - [Others](#others)
+- [Python](#python)
 - [QML](#qml)
 - [Shell](#shell)
 - [TypeScript](#typescript)
@@ -41,6 +42,10 @@
 
 - [cxsunflower/suyu-android-build](https://github.com/cxsunflower/suyu-android-build) - 非suyu官方每日构建版本，dev分支构建，不提供任何更新说明，遇到任何问题请前往https://gitlab.com/suyu-emu/suyu/-/issues
 - [XForYouX/Suyu-Android-9](https://github.com/XForYouX/Suyu-Android-9) - ForYou😘
+
+## Python 
+
+- [cxsunflower/cxsunflower](https://github.com/cxsunflower/cxsunflower) - A profile README with 1 stars and 0 forks 🌟
 
 ## QML 
 
