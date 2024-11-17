@@ -54,6 +54,14 @@ I'm a beginner programmer
 
 <!--START_SECTION:top-followers-->
 <table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/GREEDY20NINE">
+        <img src="https://avatars2.githubusercontent.com/u/155268546" width="100px;" alt="GREEDY20NINE"/>
+      </a>
+      <br />
+      <a href="https://github.com/GREEDY20NINE">GREEDY20NINE</a>
+    </td>
   </tr>
 </table>
 <!--END_SECTION:top-followers-->
