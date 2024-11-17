@@ -108,7 +108,7 @@ query {{
             active = follower["contributionsCollection"]["hasAnyContributions"]
             if not active:
                 print(f"Skipped{'*' if followerNumber > 500 else ''} (inactive): https://github.com/{login} with {followerNumber} followers and {following} following")
-                continue
+                # continue
             quota = followerNumber
             for i, starCount in enumerate([repo["stargazerCount"] for repo in follower["repositories"]["nodes"]]):
                 if starCount <= i:
@@ -120,7 +120,7 @@ query {{
                 quota += i * 5
             if following > quota:
                 print(f"Skipped{'*' if followerNumber > 500 else ''} (quota): https://github.com/{login} with {followerNumber} followers and {following} following")
-                continue
+                # continue
             followers.append((followerNumber, login, id, name if name else login))
             print(followers[-1])
         sys.stdout.flush()
