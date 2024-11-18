@@ -6,6 +6,7 @@
 ## Contents
 
 - [C#](#c#)
+- [Emacs Lisp](#emacs-lisp)
 - [Go](#go)
 - [HTML](#html)
 - [Java](#java)
@@ -20,6 +21,10 @@
 ## C# # 
 
 - [clinlx/CN_GreenLumaGUI](https://github.com/clinlx/CN_GreenLumaGUI) - 用WPF开发的GreenLuma的简单易用的中文图形界面
+
+## Emacs Lisp 
+
+- [Astux2318/TuxEMACS-Config](https://github.com/Astux2318/TuxEMACS-Config) - 
 
 ## Go 
 
@@ -45,7 +50,7 @@
 
 ## Python 
 
-- [cxsunflower/cxsunflower](https://github.com/cxsunflower/cxsunflower) - A profile README with 1 stars and 0 forks 🌟
+- [cxsunflower/cxsunflower](https://github.com/cxsunflower/cxsunflower) - My profile
 
 ## QML 
 
