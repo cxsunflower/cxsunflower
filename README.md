@@ -31,7 +31,7 @@ By the way, I copy this and create my profile based on it
 
 -->
 
-I'm a beginner programmer
+I'm a beginner programmer  :smiley:
 
 <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api?username=cxsunflower&theme=dark&show_icons=true">
@@ -39,13 +39,15 @@ I'm a beginner programmer
 </picture>
 
 -   :pencil2: Kotlin / Java / TypeScript / Python / Vue / flutter / 
+-   :seedling: Coding
 -   :package: [Arch Linux (AUR)](https://aur.archlinux.org/packages?K=sunflowercx&SeB=m) 
--   :mag: [CVEs discovered by me](CVE.md) [null]
+-   :mag: [CVEs discovered by me](CVE.md)
 -   :star: [Projects starred by me](AWESOME-STARS.md)
 
 ---
 
-### :pencil: [Latest blog posts][null]
+### :pencil: [Latest blog posts]
+-   Coming soon
 
 
 ---
