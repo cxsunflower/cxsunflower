@@ -70,7 +70,7 @@ I'm a beginner programmer  :smiley:
 
 ---
 
-### :bar_chart: [Coding time in the last month](https://github.com/muety/wakapi)
+### :bar_chart: [Coding time](https://github.com/muety/wakapi)
 
 <!--START_SECTION:waka-->
 
