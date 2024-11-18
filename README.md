@@ -38,7 +38,7 @@ I'm a beginner programmer  :smiley:
     <img align="right" width="50%" src="https://github-readme-stats.vercel.app/api?username=cxsunflower&show_icons=true">
 </picture>
 
--   :pencil2: Kotlin / Java / TypeScript / Python / Vue / flutter / 
+-   :pencil2: Kotlin / Java / TypeScript / Python / Vue / Flutter / 
 -   :seedling: Coding
 -   :package: [Arch Linux (AUR)](https://aur.archlinux.org/packages?K=sunflowercx&SeB=m) 
 -   :mag: [CVEs discovered by me](CVE.md)
