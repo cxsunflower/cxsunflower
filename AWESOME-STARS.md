@@ -36,6 +36,7 @@
 
 ## Java 
 
+- [Igalia/wolvic](https://github.com/Igalia/wolvic) - A fast and secure browser for standalone virtual-reality and augmented-reality headsets.
 - [maxiaof/github-hosts](https://github.com/maxiaof/github-hosts) - 通过修改Hosts解决国内Github经常抽风访问不到,每日更新
 - [ferredoxin/QNotified](https://github.com/ferredoxin/QNotified) - 一个旨在使QQ变得更好用的开源Xposed模块
 
