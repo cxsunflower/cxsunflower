@@ -47,7 +47,7 @@ I'm a beginner programmer  :smiley:
 ---
 
 ### :pencil: [Latest blog posts]
--   Coming soon
+-   2024-12-4 [局域网内共享魔法](https://github.com/cxsunflower/SharingMagic/blob/master/README.md)
 
 
 ---
