@@ -46,7 +46,7 @@ I'm a beginner programmer  :smiley:
 
 ---
 
-### :pencil: blogs
+### :pencil: [blogs](README.md)
 -   2024-12-4 [局域网内共享魔法](https://github.com/cxsunflower/SharingMagic/blob/master/README.md)
 
 
@@ -70,7 +70,7 @@ I'm a beginner programmer  :smiley:
 
 ---
 
-### :bar_chart: [Coding time](https://github.com/muety/wakapi)
+### :bar_chart: [Coding time in the last week](https://github.com/muety/wakapi)
 
 <!--START_SECTION:waka-->
 
