@@ -59,6 +59,7 @@
 
 ## Shell 
 
+- [7Ji-PKGBUILDs/wechat-universal-bwrap](https://github.com/7Ji-PKGBUILDs/wechat-universal-bwrap) - 微信（Universal）ArchLinux打包
 - [ImpXada/Auto-CI](https://github.com/ImpXada/Auto-CI) - Auto CI for suyu android, suyu linux, mesa turnip driver, suyu windows, strato android and sudachi android.
 - [410154425/AdGuardHome_magisk](https://github.com/410154425/AdGuardHome_magisk) - 去广告magisk模块，通过DNS层面过滤广告、防DNS劫持，使用前请先详读mode.conf文件，使用前需关闭私人dns，不可用wap接入点，支持订阅过滤规则，可兼容VPN、免模块、翻模块、校园网等特殊使用环境。top大佬(酷安)
 - [vufa/deepin-wine-qq-arch](https://github.com/vufa/deepin-wine-qq-arch) - Tencent QQ on Deepin Wine5(com.qq.im.deepin) For Archlinux
