@@ -20,6 +20,7 @@
 
 ## C# # 
 
+- [SteamAutoCracks/Steam-auto-crack](https://github.com/SteamAutoCracks/Steam-auto-crack) - Steam Game Automatic Cracker
 - [clinlx/CN_GreenLumaGUI](https://github.com/clinlx/CN_GreenLumaGUI) - 用WPF开发的GreenLuma的简单易用的中文图形界面
 
 ## Emacs Lisp 
