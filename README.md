@@ -46,8 +46,6 @@ I'm a beginner programmer  :smiley:
 
 ---
 
-### :pencil: [blogs](README.md)
--   2024-12-4 [局域网内共享魔法](https://github.com/cxsunflower/SharingMagic/blob/master/README.md)
 
 
 ---
