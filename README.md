@@ -46,7 +46,7 @@ I'm a beginner programmer  :smiley:
 
 ---
 
-
+### :pencil: [blogs](README.md)
 
 ---
 
