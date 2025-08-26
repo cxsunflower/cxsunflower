@@ -44,7 +44,6 @@
 
 - [sollyu/AndroidStudioChineseLanguagePack](https://github.com/sollyu/AndroidStudioChineseLanguagePack) - AndroidStudio中文插件(官方修改版本）
 - [cxsunflower/suyu-android-build](https://github.com/cxsunflower/suyu-android-build) - 非suyu官方每日构建版本，dev分支构建，不提供任何更新说明，遇到任何问题请前往https://gitlab.com/suyu-emu/suyu/-/issues
-- [XForYouX/Suyu-Android-9](https://github.com/XForYouX/Suyu-Android-9) - ForYou😘
 - [Android1500/GpsSetter](https://github.com/Android1500/GpsSetter) - Xposed module which will set location where you want without effect mock location.
 
 ## Python 
