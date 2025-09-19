@@ -42,6 +42,7 @@
 
 ## Others 
 
+- [xi0yu/jeb_plugin_deobfuscated](https://github.com/xi0yu/jeb_plugin_deobfuscated) - jeb_plugin_deobfuscated 是一个为 JEB 反编译器设计的 Java 插件，旨在辅助逆向工程人员在分析混淆或重命名的 APK/Dex 文件时，提高代码可读性和分析效率。该插件通过自动提取关键上下文信息、还原类/方法/字段名称、识别特征模式，帮助用户在 JEB GUI 中更直观地理解目标代码结构。
 - [sollyu/AndroidStudioChineseLanguagePack](https://github.com/sollyu/AndroidStudioChineseLanguagePack) - AndroidStudio中文插件(官方修改版本）
 - [cxsunflower/suyu-android-build](https://github.com/cxsunflower/suyu-android-build) - 非suyu官方每日构建版本，dev分支构建，不提供任何更新说明，遇到任何问题请前往https://gitlab.com/suyu-emu/suyu/-/issues
 - [Android1500/GpsSetter](https://github.com/Android1500/GpsSetter) - Xposed module which will set location where you want without effect mock location.
