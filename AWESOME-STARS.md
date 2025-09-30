@@ -29,7 +29,7 @@
 
 ## Go 
 
-- [lyc8503/NJUConnect](https://github.com/lyc8503/NJUConnect) - NJU EasyConnect 第三方开源 Golang 客户端 / NJU EasyConnect protocol reimplementation in Go
+- [lyc8503/NJUConnect](https://github.com/lyc8503/NJUConnect) - NJU VPN 第三方开源 Golang 客户端 / NJU VPN protocol reimplementation in Go
 
 ## HTML 
 
