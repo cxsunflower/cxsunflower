@@ -6,6 +6,7 @@
 ## Contents
 
 - [C#](#c#)
+- [C++](#c++)
 - [Emacs Lisp](#emacs-lisp)
 - [Go](#go)
 - [HTML](#html)
@@ -22,6 +23,10 @@
 
 - [SteamAutoCracks/Steam-auto-crack](https://github.com/SteamAutoCracks/Steam-auto-crack) - Steam Game Automatic Cracker
 - [clinlx/CN_GreenLumaGUI](https://github.com/clinlx/CN_GreenLumaGUI) - 用WPF开发的GreenLuma的简单易用的中文图形界面
+
+## C++ 
+
+- [githubhaohao/LearnFFmpeg](https://github.com/githubhaohao/LearnFFmpeg) - Android FFmpeg 音视频开发教程
 
 ## Emacs Lisp 
 
