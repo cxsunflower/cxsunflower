@@ -8,7 +8,6 @@
 - [C#](#c#)
 - [C++](#c++)
 - [Emacs Lisp](#emacs-lisp)
-- [Go](#go)
 - [HTML](#html)
 - [Java](#java)
 - [Kotlin](#kotlin)
@@ -21,7 +20,6 @@
 
 ## C# # 
 
-- [SteamAutoCracks/Steam-auto-crack](https://github.com/SteamAutoCracks/Steam-auto-crack) - Steam Game Automatic Cracker
 - [clinlx/CN_GreenLumaGUI](https://github.com/clinlx/CN_GreenLumaGUI) - 用WPF开发的GreenLuma的简单易用的中文图形界面
 
 ## C++ 
@@ -31,10 +29,6 @@
 ## Emacs Lisp 
 
 - [Astux2318/TuxEMACS-Config](https://github.com/Astux2318/TuxEMACS-Config) - 
-
-## Go 
-
-- [lyc8503/NJUConnect](https://github.com/lyc8503/NJUConnect) - NJU VPN 第三方开源 Golang 客户端 / NJU VPN protocol reimplementation in Go
 
 ## HTML 
 
