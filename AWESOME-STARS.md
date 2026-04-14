@@ -24,6 +24,7 @@
 
 ## C++ 
 
+- [Illustar0/modorganizer-bsplugins-extended](https://github.com/Illustar0/modorganizer-bsplugins-extended) - 
 - [githubhaohao/LearnFFmpeg](https://github.com/githubhaohao/LearnFFmpeg) - Android FFmpeg 音视频开发教程
 
 ## Emacs Lisp 
