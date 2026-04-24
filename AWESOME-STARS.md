@@ -8,8 +8,10 @@
 - [C#](#c#)
 - [C++](#c++)
 - [Emacs Lisp](#emacs-lisp)
+- [Go](#go)
 - [HTML](#html)
 - [Java](#java)
+- [JavaScript](#javascript)
 - [Kotlin](#kotlin)
 - [Others](#others)
 - [Python](#python)
@@ -31,6 +33,10 @@
 
 - [Astux2318/TuxEMACS-Config](https://github.com/Astux2318/TuxEMACS-Config) - 
 
+## Go 
+
+- [lyc8503/NJUConnect](https://github.com/lyc8503/NJUConnect) - NJU VPN 第三方开源 Golang 客户端 / NJU VPN protocol reimplementation in Go
+
 ## HTML 
 
 - [Aleixz/Aleixz.github.io](https://github.com/Aleixz/Aleixz.github.io) - yuzu DL web
@@ -41,8 +47,14 @@
 - [maxiaof/github-hosts](https://github.com/maxiaof/github-hosts) - 通过修改Hosts解决国内Github经常抽风访问不到,每日更新
 - [ferredoxin/QNotified](https://github.com/ferredoxin/QNotified) - 一个旨在使QQ变得更好用的开源Xposed模块
 
+## JavaScript 
+
+- [cxsunflower/hearthstonecardnet-cn-font-patch](https://github.com/cxsunflower/hearthstonecardnet-cn-font-patch) - 
+
 ## Kotlin 
 
+- [VegaBobo/Language-Selector](https://github.com/VegaBobo/Language-Selector) - Language Selector let users select individual app languages (Android 13+)
+- [cxsunflower/Language-Selector](https://github.com/cxsunflower/Language-Selector) - Language Selector let users select individual app languages (Android 13+)
 - [HighCapable/YukiHookAPI](https://github.com/HighCapable/YukiHookAPI) - ⛱️ An efficient Hook API and Xposed Module solution built in Kotlin.
 
 ## Others 
