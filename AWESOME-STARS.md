@@ -54,8 +54,8 @@
 
 ## Kotlin 
 
-- [VegaBobo/Language-Selector](https://github.com/VegaBobo/Language-Selector) - Language Selector let users select individual app languages (Android 13+)
 - [cxsunflower/Language-Selector](https://github.com/cxsunflower/Language-Selector) - Language Selector let users select individual app languages (Android 13+)
+- [VegaBobo/Language-Selector](https://github.com/VegaBobo/Language-Selector) - Language Selector let users select individual app languages (Android 13+)
 - [HighCapable/YukiHookAPI](https://github.com/HighCapable/YukiHookAPI) - ⛱️ An efficient Hook API and Xposed Module solution built in Kotlin.
 
 ## Others 
