@@ -56,6 +56,13 @@ I'm a beginner programmer  :smiley:
 <table>
   <tr>
     <td align="center">
+      <a href="https://github.com/TomRiddle712">
+        <img src="https://avatars2.githubusercontent.com/u/319186118" width="100px;" alt="TomRiddle712"/>
+      </a>
+      <br />
+      <a href="https://github.com/TomRiddle712">Tom Riddle</a>
+    </td>
+    <td align="center">
       <a href="https://github.com/GREEDY20NINE">
         <img src="https://avatars2.githubusercontent.com/u/155268546" width="100px;" alt="GREEDY20NINE"/>
       </a>
