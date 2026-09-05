@@ -56,11 +56,11 @@ I'm a beginner programmer  :smiley:
 <table>
   <tr>
     <td align="center">
-      <a href="https://github.com/bart2n">
-        <img src="https://avatars2.githubusercontent.com/u/159547379" width="100px;" alt="bart2n"/>
+      <a href="https://github.com/kpopdev">
+        <img src="https://avatars2.githubusercontent.com/u/28566705" width="100px;" alt="kpopdev"/>
       </a>
       <br />
-      <a href="https://github.com/bart2n">Ahmet Bartu NAK</a>
+      <a href="https://github.com/kpopdev">Kyla</a>
     </td>
     <td align="center">
       <a href="https://github.com/TomRiddle712">
