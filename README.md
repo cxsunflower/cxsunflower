@@ -67,7 +67,7 @@ I'm a beginner programmer  :smiley:
         <img src="https://avatars2.githubusercontent.com/u/319186118" width="100px;" alt="TomRiddle712"/>
       </a>
       <br />
-      <a href="https://github.com/TomRiddle712">Tom Riddle</a>
+      <a href="https://github.com/TomRiddle712">Tom</a>
     </td>
     <td align="center">
       <a href="https://github.com/GREEDY20NINE">
