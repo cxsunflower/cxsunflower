@@ -63,11 +63,11 @@ I'm a beginner programmer  :smiley:
       <a href="https://github.com/kpopdev">Kyla</a>
     </td>
     <td align="center">
-      <a href="https://github.com/TomRiddle712">
-        <img src="https://avatars2.githubusercontent.com/u/319186118" width="100px;" alt="TomRiddle712"/>
+      <a href="https://github.com/tomellis712">
+        <img src="https://avatars2.githubusercontent.com/u/319186118" width="100px;" alt="tomellis712"/>
       </a>
       <br />
-      <a href="https://github.com/TomRiddle712">Tom</a>
+      <a href="https://github.com/tomellis712">Tom</a>
     </td>
     <td align="center">
       <a href="https://github.com/GREEDY20NINE">
