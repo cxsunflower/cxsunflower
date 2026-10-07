@@ -51,6 +51,7 @@
 
 ## JavaScript 
 
+- [HEYD66/facet](https://github.com/HEYD66/facet) - 千面 Facet｜Windows 开源多实例浏览器，支持独立会话、环境配置、代理管理、浏览器扩展和实时宫格。
 - [AustinSuun/Harbor](https://github.com/AustinSuun/Harbor) - 抽就完事了，记得点个star，这样我会很高兴😀
 - [cxsunflower/hearthstonecardnet-cn-font-patch](https://github.com/cxsunflower/hearthstonecardnet-cn-font-patch) - 
 
