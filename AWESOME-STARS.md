@@ -51,7 +51,7 @@
 
 ## JavaScript 
 
-- [HEYD66/facet](https://github.com/HEYD66/facet) - 千面 Facet｜Windows 开源多实例浏览器，支持独立会话、环境配置、代理管理、浏览器扩展和实时宫格。
+- [HEYD66/facet](https://github.com/HEYD66/facet) - 千面 Facet｜以用户隐私保护为核心、内置 AI 助手的开源多实例浏览器，支持独立会话、环境配置、代理管理和网页自动化。
 - [AustinSuun/Harbor](https://github.com/AustinSuun/Harbor) - 抽就完事了，记得点个star，这样我会很高兴😀
 - [cxsunflower/hearthstonecardnet-cn-font-patch](https://github.com/cxsunflower/hearthstonecardnet-cn-font-patch) - 
 
@@ -59,7 +59,7 @@
 
 - [cxsunflower/Language-Selector](https://github.com/cxsunflower/Language-Selector) - Language Selector let users select individual app languages (Android 13+)
 - [VegaBobo/Language-Selector](https://github.com/VegaBobo/Language-Selector) - Language Selector let users select individual app languages (Android 13+)
-- [HighCapable/YukiHookAPI](https://github.com/HighCapable/YukiHookAPI) - ⛱️ An efficient Hook API and Xposed Module solution built in Kotlin.
+- [HighCapable/YukiHook](https://github.com/HighCapable/YukiHook) - A modern hook API and Xposed module solution.
 
 ## Others 
 
