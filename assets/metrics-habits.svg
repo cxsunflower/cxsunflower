@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="170" viewBox="0 0 1000 170" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+<title id="title">METRICS // CODING HABITS</title><desc id="desc">Coding habits, activity charts and language trends</desc>
+<rect width="1000" height="170" rx="8" fill="#0b1020"/><rect x="8" y="8" width="984" height="154" fill="none" stroke="#8b5cf6" stroke-width="4"/>
+<rect x="22" y="22" width="956" height="126" fill="#111a31" stroke="#33436f" stroke-width="2"/>
+<text x="48" y="62" fill="#35d6e8" font-family="monospace" font-size="16" font-weight="bold" letter-spacing="3">METRICS // CODING HABITS</text>
+<text x="48" y="104" fill="#f6c85f" font-family="monospace" font-size="20" font-weight="bold">AWAITING FIRST SUCCESSFUL METRICS RUN</text>
+<text x="48" y="130" fill="#94a3b8" font-family="monospace" font-size="12">Coding habits, activity charts and language trends</text>
+</svg>
