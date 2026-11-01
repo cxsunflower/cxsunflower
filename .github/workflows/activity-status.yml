@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/activity-status.yml"
+      - "src/update_activity.py"
 
 permissions:
   contents: write
