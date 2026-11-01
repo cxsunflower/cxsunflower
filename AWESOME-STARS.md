@@ -7,6 +7,7 @@
 
 - [C#](#c#)
 - [C++](#c++)
+- [Dart](#dart)
 - [Emacs Lisp](#emacs-lisp)
 - [Go](#go)
 - [HTML](#html)
@@ -30,6 +31,10 @@
 
 - [Illustar0/modorganizer-bsplugins-extended](https://github.com/Illustar0/modorganizer-bsplugins-extended) - 
 - [githubhaohao/LearnFFmpeg](https://github.com/githubhaohao/LearnFFmpeg) - Android FFmpeg 音视频开发教程
+
+## Dart 
+
+- [ccch1mneyyy/dsh-Go](https://github.com/ccch1mneyyy/dsh-Go) - dsh-go — DeepSeek Harness 装进口袋：手机本机运行，也能遥控你的电脑。
 
 ## Emacs Lisp 
 
