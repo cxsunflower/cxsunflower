@@ -117,6 +117,7 @@ def quota_of(f):
 
 def collect(handle, token):
     followers = []
+    candidates = []
     for page in pages(handle, token):
         for f in page['nodes']:
             if not f:
@@ -125,16 +126,22 @@ def collect(handle, token):
             number = f['followers']['totalCount']
             following = f['following']['totalCount']
             mark = '*' if number > 500 else ''
+            entry = (number, login, f['databaseId'], f['name'] or login)
+            candidates.append(entry)
             if not f['contributionsCollection']['hasAnyContributions']:
                 print('Skipped%s (inactive): https://github.com/%s with %d followers and %d following' % (mark, login, number, following))
                 continue
             if following > quota_of(f):
                 print('Skipped%s (quota): https://github.com/%s with %d followers and %d following' % (mark, login, number, following))
                 continue
-            followers.append((number, login, f['databaseId'], f['name'] or login))
+            followers.append(entry)
             print(followers[-1])
         sys.stdout.flush()
-    followers.sort(key=lambda x: (-x[0], x[1].lower()))
+    order = lambda items: sorted(items, key=lambda x: (-x[0], x[1].lower()))
+    followers = order(followers)
+    if not followers and candidates:
+        print('All followers were filtered out; falling back to the unfiltered list')
+        return order(candidates)
     return followers
 
 

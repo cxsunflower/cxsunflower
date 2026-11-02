@@ -76,6 +76,14 @@ class TopFollowers(unittest.TestCase):
         again, _ = self.run_script(nodes)
         self.assertEqual(mid, again)
 
+    def test_all_filtered_falls_back(self):
+        mid, out = self.run_script([node(0, active=False), node(1, following=5000)])
+        self.assertIn('falling back to the unfiltered list', out)
+        self.assertIn('user00', mid)
+        self.assertIn('user01', mid)
+        self.assertEqual((mid.count('<tr>'), mid.count('</tr>'), mid.count('<td ')), (1, 1, 2))
+        self.assertNotIn('NO SIGNALS YET', mid)
+
 
 if __name__ == '__main__':
     unittest.main()
