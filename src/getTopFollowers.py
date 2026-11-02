@@ -12,149 +12,170 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+   cx 的修改：标准库 urllib 取代 requests；恢复 inactive/quota 过滤；
+   修复空列表的残缺表格、替换串转义、昵称 HTML 转义；支持 FOLLOWERS_FIXTURE 离线测试。
 """
 
-import requests
+import html
 import json
-import sys
+import os
 import re
-from time import sleep
+import sys
+import time
+import urllib.error
+import urllib.request
 
-if __name__ == "__main__":
-    assert(len(sys.argv) == 4)
-    handle = sys.argv[1]
-    token = sys.argv[2]
-    readmePath = sys.argv[3]
+API = 'https://api.github.com/graphql'
+MAX_SHOWN = 21
+PER_ROW = 7
 
-    headers = {
-        "Authorization": f"token {token}"
+QUERY = '''
+query($login: String!, $cursor: String) {
+  user(login: $login) {
+    followers(first: 10, after: $cursor) {
+      pageInfo { endCursor hasNextPage }
+      nodes {
+        login
+        name
+        databaseId
+        following { totalCount }
+        repositories(first: 20, orderBy: {field: STARGAZERS, direction: DESC}) {
+          nodes { stargazerCount }
+        }
+        repositoriesContributedTo(first: 50, contributionTypes: [COMMIT], orderBy: {field: STARGAZERS, direction: DESC}) {
+          nodes { stargazerCount }
+        }
+        followers { totalCount }
+        contributionsCollection { hasAnyContributions }
+      }
     }
-
-    followers = []
-    cursor = None
-    retryCount = 0
-
-    while True:
-        query = f'''
-query {{
-    user(login: "{handle}") {{
-        followers(first: 10{f', after: "{cursor}"' if cursor else ''}) {{
-            pageInfo {{
-                endCursor
-                hasNextPage
-            }}
-            nodes {{
-                login
-                name
-                databaseId
-                following {{
-                    totalCount
-                }}
-                repositories(
-                    first: 20,
-                    orderBy: {{
-                        field: STARGAZERS,
-                        direction: DESC,
-                    }},
-                ) {{
-                    nodes {{
-                        stargazerCount
-                    }}
-                }}
-                repositoriesContributedTo(
-                    first: 50,
-                    contributionTypes: [COMMIT],
-                    orderBy: {{
-                        field: STARGAZERS,
-                        direction: DESC,
-                    }},
-                ) {{
-                    nodes {{
-                        stargazerCount
-                    }}
-                }}
-                followers {{
-                    totalCount
-                }}
-                contributionsCollection {{
-                    hasAnyContributions
-                }}
-            }}
-        }}
-    }}
-}}
+  }
+}
 '''
-        response = requests.post(f"https://api.github.com/graphql", json.dumps({ "query": query }), headers = headers)
-        if not response.ok or "data" not in response.json():
-            if retryCount < 3 and "Retry-After" in response.headers:
-                wait = int(response.headers["Retry-After"])
-                print(f"Rate limit exceeded, retry after {wait} seconds")
-                sleep(wait)
-                retryCount += 1
+
+SECTION = re.compile(r'(<!--START_SECTION:top-followers-->)(.*?)(<!--END_SECTION:top-followers-->)', re.S)
+
+
+def post(variables, token):
+    body = json.dumps({'query': QUERY, 'variables': variables}).encode('utf-8')
+    headers = {'Authorization': 'bearer ' + token, 'Content-Type': 'application/json', 'User-Agent': 'top-followers'}
+    retry = 0
+    while True:
+        req = urllib.request.Request(API, data=body, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                payload = json.loads(resp.read().decode('utf-8'))
+        except urllib.error.HTTPError as exc:
+            wait = exc.headers.get('Retry-After')
+            if wait and wait.isdigit() and retry < 3:
+                print('Rate limit exceeded, retry after %s seconds' % wait)
+                time.sleep(int(wait))
+                retry += 1
                 continue
-            print(query)
-            print(response.status_code)
-            print(response.headers)
-            print(response.text)
-            exit(1)
-        retryCount = 0
-        res = response.json()["data"]["user"]["followers"]
-        for follower in res["nodes"]:
-            following = follower["following"]["totalCount"]
-            login = follower["login"]
-            name = follower["name"]
-            id = follower["databaseId"]
-            followerNumber = follower["followers"]["totalCount"]
-            active = follower["contributionsCollection"]["hasAnyContributions"]
-            if not active:
-                print(f"Skipped{'*' if followerNumber > 500 else ''} (inactive): https://github.com/{login} with {followerNumber} followers and {following} following")
-                # continue
-            quota = followerNumber
-            for i, starCount in enumerate([repo["stargazerCount"] for repo in follower["repositories"]["nodes"]]):
-                if starCount <= i:
-                    break
-                quota += starCount * (i + 1)
-            for i, starCount in enumerate([repo["stargazerCount"] for repo in follower["repositoriesContributedTo"]["nodes"]]):
-                if starCount <= i:
-                    break
-                quota += i * 5
-            if following > quota:
-                print(f"Skipped{'*' if followerNumber > 500 else ''} (quota): https://github.com/{login} with {followerNumber} followers and {following} following")
-                # continue
-            followers.append((followerNumber, login, id, name if name else login))
+            sys.exit('GraphQL 请求失败: %s %s' % (exc.code, exc.read().decode('utf-8', 'replace')[:2000]))
+        except urllib.error.URLError as exc:
+            sys.exit('GraphQL 网络错误: %s' % exc)
+        user = (payload.get('data') or {}).get('user')
+        if not user:
+            sys.exit('GraphQL 返回异常: ' + json.dumps(payload)[:2000])
+        return user['followers']
+
+
+def pages(handle, token):
+    fixture = os.environ.get('FOLLOWERS_FIXTURE')
+    if fixture:
+        with open(fixture, 'r', encoding='utf-8') as fh:
+            for page in json.load(fh):
+                yield page
+        return
+    cursor = None
+    while True:
+        page = post({'login': handle, 'cursor': cursor}, token)
+        yield page
+        if not page['pageInfo']['hasNextPage']:
+            return
+        cursor = page['pageInfo']['endCursor']
+
+
+def stars(conn):
+    return [r['stargazerCount'] for r in (conn.get('nodes') or []) if r]
+
+
+def quota_of(f):
+    quota = f['followers']['totalCount']
+    for i, count in enumerate(stars(f['repositories'])):
+        if count <= i:
+            break
+        quota += count * (i + 1)
+    for i, count in enumerate(stars(f['repositoriesContributedTo'])):
+        if count <= i:
+            break
+        quota += i * 5
+    return quota
+
+
+def collect(handle, token):
+    followers = []
+    for page in pages(handle, token):
+        for f in page['nodes']:
+            if not f:
+                continue
+            login = f['login']
+            number = f['followers']['totalCount']
+            following = f['following']['totalCount']
+            mark = '*' if number > 500 else ''
+            if not f['contributionsCollection']['hasAnyContributions']:
+                print('Skipped%s (inactive): https://github.com/%s with %d followers and %d following' % (mark, login, number, following))
+                continue
+            if following > quota_of(f):
+                print('Skipped%s (quota): https://github.com/%s with %d followers and %d following' % (mark, login, number, following))
+                continue
+            followers.append((number, login, f['databaseId'], f['name'] or login))
             print(followers[-1])
         sys.stdout.flush()
-        if not res["pageInfo"]["hasNextPage"]:
-            break
-        cursor = res["pageInfo"]["endCursor"]
+    followers.sort(key=lambda x: (-x[0], x[1].lower()))
+    return followers
 
-    followers.sort(reverse = True)
 
-    html = "<table>\n"
+def render(followers):
+    shown = followers[:MAX_SHOWN]
+    if not shown:
+        return '<p align="center"><code>NO SIGNALS YET</code></p>'
+    lines = ['<table>']
+    for start in range(0, len(shown), PER_ROW):
+        lines.append('  <tr>')
+        for _, login, uid, name in shown[start:start + PER_ROW]:
+            lg = html.escape(login, quote=True)
+            nm = html.escape(name, quote=True)
+            lines.append('    <td align="center">')
+            lines.append('      <a href="https://github.com/%s">' % lg)
+            lines.append('        <img src="https://avatars.githubusercontent.com/u/%s?s=100" width="100" alt="%s"/>' % (uid, lg))
+            lines.append('      </a>')
+            lines.append('      <br />')
+            lines.append('      <a href="https://github.com/%s">%s</a>' % (lg, nm))
+            lines.append('    </td>')
+        lines.append('  </tr>')
+    lines.append('</table>')
+    return '\n'.join(lines)
 
-    for i in range(min(len(followers), 21)):
-        login = followers[i][1]
-        id = followers[i][2]
-        name = followers[i][3]
-        if i % 7 == 0:
-            if i != 0:
-                html += "  </tr>\n"
-            html += "  <tr>\n"
-        html += f'''    <td align="center">
-      <a href="https://github.com/{login}">
-        <img src="https://avatars2.githubusercontent.com/u/{id}" width="100px;" alt="{login}"/>
-      </a>
-      <br />
-      <a href="https://github.com/{login}">{name}</a>
-    </td>
-'''
 
-    html += "  </tr>\n</table>"
+def replace_section(content, block):
+    if not SECTION.search(content):
+        sys.exit('README 中缺少 top-followers 标记')
+    return SECTION.sub(lambda m: m.group(1) + '\n' + block + '\n' + m.group(3), content, count=1)
 
-    with open(readmePath, "r") as readme:
-        content = readme.read()
 
-    newContent = re.sub(r"(?<=<!\-\-START_SECTION:top\-followers\-\->)[\s\S]*(?=<!\-\-END_SECTION:top\-followers\-\->)", f"\n{html}\n", content)
+def main(argv):
+    if len(argv) != 4:
+        sys.exit('用法: getTopFollowers.py <handle> <token> <readme>')
+    handle, token, readme = argv[1:]
+    block = render(collect(handle, token))
+    with open(readme, 'r', encoding='utf-8', newline='') as fh:
+        content = fh.read()
+    with open(readme, 'w', encoding='utf-8', newline='') as fh:
+        fh.write(replace_section(content, block))
 
-    with open(readmePath, "w") as readme:
-        readme.write(newContent)
+
+if __name__ == '__main__':
+    main(sys.argv)

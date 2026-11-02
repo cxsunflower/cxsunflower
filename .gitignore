@@ -1,1 +1,3 @@
 .vscode/
+refs/node_modules/
+__pycache__/

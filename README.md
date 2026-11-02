@@ -1,103 +1,78 @@
-<div align="center">
-  <img src="./assets/pixel-banner.svg" alt="CX / SUNFLOWER - Developer Universe" width="100%" />
-  <br/>
-  <img src="https://img.shields.io/badge/PLAYER-cxsunflower-8b5cf6?style=flat-square&labelColor=111827" alt="Player" />
-  <img src="https://img.shields.io/badge/CLASS-Developer-35d6e8?style=flat-square&labelColor=111827" alt="Class" />
-  <img src="https://img.shields.io/badge/STATUS-Building-f6c85f?style=flat-square&labelColor=111827" alt="Status" />
-</div>
+<!-- 灵感与部分脚本来自 ouuan (https://github.com/ouuan/ouuan)，Apache-2.0，署名见 LICENSE 与 src/getTopFollowers.py -->
 
----
+<p align="center">
+  <img src="assets/hero.svg" alt="cxsunflower 宇宙像素风横幅" width="100%"/>
+</p>
 
-## ▣ MISSION CONTROL
+<p align="center">
+  I'm a beginner programmer :rocket: 在代码的宇宙里慢慢探索
+</p>
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/cxsunflower/cxsunflower/master/assets/pixel-spaceship.svg" alt="Animated pixel spaceship flying through space" width="100%" />
-  <br/>
-  <img src="https://raw.githubusercontent.com/cxsunflower/cxsunflower/profile-live/activity-status.svg" alt="GitHub public activity signal" width="100%" />
-</div>
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
 
-> **Activity signal ≠ online status.** The status panel checks public GitHub events on an approximately 15-minute schedule and marks activity observed within the last 30 minutes. GitHub documents that public-event data can be delayed from around 30 seconds to as much as 6 hours, so this is only an approximate public-activity signal, never a claim that I am currently online.
+### :milky_way: 技术星系
 
-## ▣ PLAYER PROFILE
+<p align="center">
+  <img src="assets/stack.svg" alt="Kotlin / Java / TypeScript / Python / Vue / Flutter 技术栈行星轨道" width="100%"/>
+</p>
 
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=cxsunflower&show_icons=true&theme=radical" alt="GitHub stats" width="60%"/>
+</p>
+
+-   :package: [Arch Linux (AUR)](https://aur.archlinux.org/packages?K=sunflowercx&SeB=m)
+-   :star: [Projects starred by me](AWESOME-STARS.md)
+
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
+
+### :snake: Activity // 贪吃蛇
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/cxsunflower/cxsunflower/output/snake.svg" alt="贡献日历贪吃蛇" width="100%"/>
+</p>
+
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
+
+### :sparkles: [My followers](src/getTopFollowers.py)
+
+<!--START_SECTION:top-followers-->
 <table>
   <tr>
-    <td width="56%" valign="top">
-      <p><b>PLAYER:</b> cxsunflower</p>
-      <p>Beginner programmer :smiley:</p>
-      <p>Exploring code, open source, and the occasional side quest.</p>
-      <ul>
-        <li>:seedling: Always learning and coding</li>
-        <li>:package: <a href="https://aur.archlinux.org/packages?K=sunflowercx&SeB=m">Arch Linux (AUR)</a></li>
-        <li>:mag: <a href="CVE.md">CVEs discovered by me</a></li>
-        <li>:star: <a href="AWESOME-STARS.md">Projects starred by me</a></li>
-      </ul>
+    <td align="center">
+      <a href="https://github.com/kpopdev">
+        <img src="https://avatars.githubusercontent.com/u/28566705?s=100" width="100" alt="kpopdev"/>
+      </a>
+      <br />
+      <a href="https://github.com/kpopdev">Kyla</a>
     </td>
-    <td width="44%" valign="top" align="center">
-      <img src="https://github-readme-stats.vercel.app/api?username=cxsunflower&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0B1020&title_color=F6C85F&icon_color=8B5CF6&text_color=CBD5E1" alt="GitHub stats" width="100%" />
+    <td align="center">
+      <a href="https://github.com/tomellis712">
+        <img src="https://avatars.githubusercontent.com/u/319186118?s=100" width="100" alt="tomellis712"/>
+      </a>
+      <br />
+      <a href="https://github.com/tomellis712">Tom</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/GREEDY20NINE">
+        <img src="https://avatars.githubusercontent.com/u/155268546?s=100" width="100" alt="GREEDY20NINE"/>
+      </a>
+      <br />
+      <a href="https://github.com/GREEDY20NINE">GREEDY20NINE</a>
     </td>
   </tr>
 </table>
+<!--END_SECTION:top-followers-->
 
-## ▣ PIXEL GALAXY SYSTEMS
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
 
-| Module | Implementation | Refresh |
-|---|---|---|
-| Dynamic spaceship | Custom pixel SVG + animated flight path | Continuous |
-| Activity signal | GitHub Public Events API | About every 15 minutes |
-| Metrics main panel | <code>lowlighter/metrics</code> | Daily |
-| Isometric contribution calendar | Metrics Isocalendar plugin | Daily |
-| GitHub achievements | Metrics Achievements plugin | Daily |
-| Coding habits and languages | Metrics Habits + Languages plugins | Daily |
-| Contribution snake | <code>Platane/snk</code> animated SVG | Daily |
-| Coding time | Existing WakaTime / Wakapi workflow | Preserved |
-
-## ▣ METRICS // MAIN DASHBOARD
+### :bar_chart: [Coding time](https://github.com/muety/wakapi)
 
 <p align="center">
-  <img src="./assets/metrics-main.svg" alt="GitHub metrics main dashboard: languages, recent activity and stars" width="100%" />
+  <img src="assets/waka.svg" alt="Coding time 像素统计" width="100%"/>
 </p>
 
-## ▣ ISOMETRIC CONTRIBUTION MAP
-
-<p align="center">
-  <img src="./assets/metrics-isocalendar.svg" alt="Full-year isometric GitHub contribution calendar" width="100%" />
-</p>
-
-## ▣ GITHUB ACHIEVEMENTS
-
-<p align="center">
-  <img src="./assets/metrics-achievements.svg" alt="GitHub achievements generated by Metrics" width="100%" />
-</p>
-
-## ▣ CODING HABITS
-
-<p align="center">
-  <img src="./assets/metrics-habits.svg" alt="Coding habits, activity charts and languages generated by Metrics" width="100%" />
-</p>
-
-## ▣ CONTRIBUTION SNAKE
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/cxsunflower/cxsunflower/output/github-snake-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/cxsunflower/cxsunflower/output/github-snake.svg" />
-    <img src="https://raw.githubusercontent.com/cxsunflower/cxsunflower/output/github-snake.svg" alt="Animated snake traversing the GitHub contribution calendar" width="100%" />
-  </picture>
-</p>
-
-## ▣ TECH LOADOUT
-
-<p>
-  <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white" alt="Kotlin" />
-  <img src="https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java" />
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/Vue-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white" alt="Vue" />
-  <img src="https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=flutter&logoColor=white" alt="Flutter" />
-</p>
-
-## ▣ CODING TIME // WAKATIME / WAKAPI
+<details>
+<summary>纯文本版</summary>
 
 <!--START_SECTION:waka-->
 
@@ -111,42 +86,8 @@ XML                    23 hrs 41 mins        🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜�
 
 <!--END_SECTION:waka-->
 
-## ▣ COMMUNITY // TOP FOLLOWERS
+</details>
 
-<!--START_SECTION:top-followers-->
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/kpopdev">
-        <img src="https://avatars2.githubusercontent.com/u/28566705" width="100px;" alt="kpopdev"/>
-      </a>
-      <br />
-      <a href="https://github.com/kpopdev">Kyla</a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/tomellis712">
-        <img src="https://avatars2.githubusercontent.com/u/319186118" width="100px;" alt="tomellis712"/>
-      </a>
-      <br />
-      <a href="https://github.com/tomellis712">Tom</a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/GREEDY20NINE">
-        <img src="https://avatars2.githubusercontent.com/u/155268546" width="100px;" alt="GREEDY20NINE"/>
-      </a>
-      <br />
-      <a href="https://github.com/GREEDY20NINE">GREEDY20NINE</a>
-    </td>
-  </tr>
-</table>
-<!--END_SECTION:top-followers-->
-
----
-
-<div align="center">
-  <code>[ END OF README ]</code>
-  <br/>
-  <sub>Built one pixel at a time · cxsunflower</sub>
-  <br/>
-  <sub>Metrics first render requires the repository Actions secret <code>METRICS_TOKEN</code>. See <a href="DEPLOYMENT.md">deployment notes</a>.</sub>
-</div>
+<p align="center">
+  <img src="assets/footer.svg" alt="END OF TRANSMISSION" width="100%"/>
+</p>

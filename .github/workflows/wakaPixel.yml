@@ -1,0 +1,36 @@
+name: Wakapi Pixel Stats
+
+on:
+  schedule:
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-writes
+  cancel-in-progress: false
+
+jobs:
+  waka-pixel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate assets/waka.svg
+        env:
+          WAKAPI_BASE_URL: ${{ secrets.WAKAPI_BASE_URL }}
+          WAKAPI_API_KEY: ${{ secrets.WAKAPI_API_KEY }}
+        run: python src/wakaPixel.py assets/waka.svg
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add assets/waka.svg
+          git diff --cached --quiet || git commit -m "Update Wakapi stats"
+          git pull --rebase
+          git push

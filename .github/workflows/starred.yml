@@ -5,28 +5,34 @@ on:
     - cron: 0 18 * * *
   workflow_dispatch:
 
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-writes
+  cancel-in-progress: false
+
 jobs:
   awesome-stars:
     name: update awesome-stars
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
       - run: pip install starred
       - name: Update star list
-        run: starred --username ${{ github.repository_owner }} --sort --token ${{ secrets.GITHUB_TOKEN }} > AWESOME-STARS.md
-      - name: Commit changes
+        env:
+          OWNER: ${{ github.repository_owner }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: starred --username "$OWNER" --sort --token "$GH_TOKEN" > AWESOME-STARS.md
+      - name: Commit and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A
-          git diff-index --quiet HEAD || git commit -m "Update awesome stars"
-      - name: Pull changes
-        run: git pull -r
-      - name: Push changes
-        uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git add AWESOME-STARS.md
+          git diff --cached --quiet || git commit -m "Update awesome stars"
+          git pull --rebase
+          git push
