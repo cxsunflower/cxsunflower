@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="190" viewBox="0 0 1000 190" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+  <title id="title">GitHub public activity signal: QUIET ORBIT</title>
+  <desc id="desc">No public event in the last 30 min / last: ccch1mneyyy/dsh-Go. This is not a real-time online indicator.</desc>
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#263252" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1000" height="190" rx="8" fill="#0b1020"/>
+  <rect width="1000" height="190" fill="url(#grid)" opacity=".32"/>
+  <rect x="8" y="8" width="984" height="174" fill="none" stroke="#8b5cf6" stroke-width="4"/>
+  <rect x="22" y="22" width="956" height="146" fill="#111a31" stroke="#33436f" stroke-width="2"/>
+  <g fill="#d7e5ff">
+    <rect x="54" y="44" width="4" height="4"/><rect x="92" y="118" width="4" height="4"/>
+    <rect x="180" y="38" width="4" height="4"/><rect x="250" y="142" width="4" height="4"/>
+    <rect x="874" y="42" width="4" height="4"/><rect x="932" y="126" width="4" height="4"/>
+  </g>
+  <g transform="translate(48 72)">
+    <rect x="0" y="16" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="16" y="0" width="32" height="48" fill="#d7e5ff"/>
+    <rect x="48" y="16" width="16" height="16" fill="#35d6e8"/>
+    <rect x="16" y="16" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="-16" y="20" width="16" height="8" fill="#f6c85f">
+      <animate attributeName="opacity" values="1;.45;1" dur=".65s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="64" y="20" width="8" height="8" fill="#35d6e8"/>
+  </g>
+  <text x="150" y="54" fill="#35d6e8" font-family="monospace" font-size="15" font-weight="bold" letter-spacing="3">MISSION CONTROL / PUBLIC EVENTS API</text>
+  <text x="150" y="100" fill="#f6c85f" font-family="monospace" font-size="30" font-weight="bold">QUIET ORBIT</text>
+  <text x="150" y="128" fill="#d7e5ff" font-family="monospace" font-size="15">No public event in the last 30 min / last: ccch1mneyyy/dsh-Go</text>
+  <text x="150" y="153" fill="#94a3b8" font-family="monospace" font-size="12">LAST EVENT: 12 hr ago  |  CHECKED: 2026-11-02 18:04:28 CST</text>
+  <text x="950" y="153" text-anchor="end" fill="#64748b" font-family="monospace" font-size="10">NOT AN ONLINE STATUS</text>
+</svg>
