@@ -339,45 +339,66 @@ ORBIT_CSS = (
 )
 
 
-def build_stack():
-    W, H = 900, 320
-    cx, cy = 450, 140
-    rng = random.Random(77)
-    body = [starfield(rng, W, H, 70, 24), path(text_rects('TECH GALAXY', 24, 20, 3), CYAN)]
+def build_panel():
+    W, H = 900, 420
+    cx, cy = 710, 206
+    rng = random.Random(2027)
+    body = [starfield(rng, W, H, 70, 18), nebula(rng, 680, 210, PURPLE, 16),
+            path(text_rects('PLAYER PROFILE', 28, 22, 4), CYAN),
+            path(text_rects('TECH GALAXY', 634, 24, 3), PINK),
+            path([(520, 68, 2, H - 96)], FRAME)]
+
+    body.append(path(text_rects('CXSUNFLOWER', 32, 78, 5), WHITE))
+    body.append(path(text_rects('BEGINNER PROGRAMMER', 32, 132, 2), CYAN))
+    body.append(path([(32, 158, 448, 2)], FRAME))
+    rows = ['KOTLIN / JAVA / TYPESCRIPT', 'PYTHON / VUE / FLUTTER',
+            'ARCH LINUX AUR', 'OPEN SOURCE / CODING']
+    for i, line in enumerate(rows):
+        y = 178 + i * 30
+        body.append("<g transform='translate(42 %d)'>%s</g>" % (y + 7, ''.join(disc_paths(2, 2, [PURPLE, YELLOW, CYAN, PINK][i]))))
+        body.append(path(text_rects(line, 62, y, 2), WHITE))
+    body.append("<rect class='t1' x='34' y='326' width='8' height='8' fill='%s'/>" % PINK)
+    body.append(path(text_rects('STATUS // ONLINE', 52, 322, 2), PINK))
+    body.append(path(text_rects('GITHUB // CXSUNFLOWER', 34, 354, 2), '#8f86e8'))
+
     for i in range(len(LANGS)):
         body.append("<ellipse cx='%d' cy='%d' rx='%d' ry='%d' fill='none' stroke='%s' stroke-width='2' stroke-dasharray='6 6'/>"
-                    % (cx, cy, 100 + i * 56, 28 + i * 17, DIM))
-    body.append("<g transform='translate(%d %d)'><rect class='halo' x='-34' y='-34' width='68' height='68' fill='none' stroke='%s' stroke-width='2'/>%s</g>"
-                % (cx, cy, PINK, ''.join(disc_paths(5, 4, YELLOW))))
+                    % (cx, cy, 78 + i * 20, 24 + i * 8, DIM))
+    body.append("<g transform='translate(%d %d)'><rect class='halo' x='-26' y='-26' width='52' height='52' fill='none' stroke='%s' stroke-width='2'/>%s</g>"
+                % (cx, cy, PINK, ''.join(disc_paths(4, 3, YELLOW))))
     for i, (name, color) in enumerate(LANGS):
-        rx, ry = 100 + i * 56, 28 + i * 17
-        d = (14 + i * 6) / 2.0
-        off = i * 3.7
+        rx, ry = 78 + i * 20, 24 + i * 8
+        dur = (12 + i * 4) / 2.0
+        off = i * 2.9
         body.append("<g transform='translate(%d %d)'><g class='ox' style='--rx:%dpx;animation-duration:%ss;animation-delay:-%ss'>"
                     "<g class='oy' style='--ry:%dpx;animation-duration:%ss;animation-delay:-%ss'>%s</g></g></g>"
-                    % (cx, cy, rx, n(d), n(round(off, 2)), ry, n(d), n(round(off + d / 2, 2)),
-                       ''.join(disc_paths(4 if i % 2 == 0 else 3, 3, color))))
+                    % (cx, cy, rx, n(dur), n(round(off, 2)), ry, n(dur), n(round(off + dur / 2, 2)),
+                       ''.join(disc_paths(3 if i % 2 == 0 else 2, 2, color))))
     for i, (name, color) in enumerate(LANGS):
-        x = 14 + i * 148
-        body.append("<g transform='translate(%d 291)'>%s</g>" % (x + 7, ''.join(disc_paths(3, 2, color))))
-        body.append(path(text_rects(name.upper(), x + 22, 284, 2), WHITE))
+        col, row = i % 2, i // 2
+        x, y = 552 + col * 148, 330 + row * 26
+        body.append("<g transform='translate(%d %d)'>%s</g>" % (x + 5, y + 6, ''.join(disc_paths(2, 2, color))))
+        body.append(path(text_rects(name.upper(), x + 18, y, 2), WHITE))
     body.append(frame(W, H))
-    return svg_doc(W, H, 'Tech galaxy: Kotlin Java TypeScript Python Vue Flutter', ''.join(body), ORBIT_CSS)
+    return svg_doc(W, H, 'Player profile and tech galaxy panel', ''.join(body), ORBIT_CSS)
 
 
-def build_divider():
-    W, H = 900, 36
-    cols = [PURPLE, CYAN, PINK]
-    parts = []
-    for i in range(45):
-        if 20 <= i <= 24:
-            continue
-        parts.append("<rect class='dv' style='animation-delay:%ss' x='%d' y='15' width='6' height='6' fill='%s'/>"
-                     % (n(round(i * 0.1, 1)), 10 + i * 20, cols[i % 3]))
-    star = [(447, 15, 6, 6), (441, 15, 6, 6), (453, 15, 6, 6), (447, 9, 6, 6), (447, 21, 6, 6), (435, 15, 6, 6), (459, 15, 6, 6)]
-    parts.append("<g class='halo'>%s</g>" % path(star, WHITE))
-    css = ORBIT_CSS + '.dv{animation:dv 4.4s ease-in-out infinite}@keyframes dv{0%,100%{opacity:.25}12%{opacity:1}30%{opacity:.25}}'
-    return svg_doc(W, H, 'pixel star divider', ''.join(parts), css)
+def build_button(text, color, stars=3):
+    W, H = 260, 56
+    rng = random.Random(stars * 97 + len(text))
+    body = [starfield(rng, W, H, 14, 6),
+            "<g transform='translate(24 22)'>%s</g>" % ''.join(disc_paths(3, 2, color)),
+            path(text_rects(text, 48, 18, 2), WHITE),
+            path([(48, 38, text_w(text, 2), 2)], FRAME),
+            frame(W, H)]
+    return svg_doc(W, H, text, ''.join(body))
+
+
+def build_label(text, color=CYAN):
+    W, H = 900, 46
+    rng = random.Random(len(text) * 31)
+    body = [starfield(rng, W, H, 16, 6), path(text_rects(text, 28, 8, 3), color)]
+    return svg_doc(W, H, text, ''.join(body))
 
 
 def build_footer():
@@ -395,8 +416,12 @@ def build_footer():
 def main(argv):
     out = Path(argv[1]) if len(argv) > 1 else Path(__file__).resolve().parent.parent / 'assets'
     out.mkdir(parents=True, exist_ok=True)
-    for name, svg in [('hero.svg', build_hero()), ('divider.svg', build_divider()),
-                      ('stack.svg', build_stack()), ('footer.svg', build_footer())]:
+    for name, svg in [('hero.svg', build_hero()), ('panel.svg', build_panel()),
+                      ('btn-aur.svg', build_button('ARCH LINUX AUR', YELLOW)),
+                      ('btn-stars.svg', build_button('STARRED PROJECTS', PURPLE)),
+                      ('label-activity.svg', build_label('ACTIVITY // SNAKE', PINK)),
+                      ('label-crew.svg', build_label('CREW // FOLLOWERS', CYAN)),
+                      ('footer.svg', build_footer())]:
         with open(out / name, 'w', encoding='utf-8', newline='\n') as fh:
             fh.write(svg)
         print('%s %d bytes' % (out / name, len(svg.encode('utf-8'))))

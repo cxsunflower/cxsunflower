@@ -1,4 +1,4 @@
-name: Wakapi Pixel Stats
+name: WakaTime Pixel Stats
 
 on:
   schedule:
@@ -23,14 +23,17 @@ jobs:
           python-version: '3.12'
       - name: Generate assets/waka.svg
         env:
-          WAKAPI_BASE_URL: ${{ secrets.WAKAPI_BASE_URL }}
+          WAKA_PROVIDER: wakatime
+          WAKATIME_OAUTH_TOKEN: ${{ secrets.WAKATIME_OAUTH_TOKEN }}
+          WAKATIME_API_URL: https://wakatime.com
           WAKAPI_API_KEY: ${{ secrets.WAKAPI_API_KEY }}
+          WAKAPI_BASE_URL: ${{ secrets.WAKAPI_BASE_URL }}
         run: python src/wakaPixel.py assets/waka.svg
       - name: Commit and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add assets/waka.svg
-          git diff --cached --quiet || git commit -m "Update Wakapi stats"
+          git diff --cached --quiet || git commit -m "Update WakaTime stats"
           git pull --rebase
           git push

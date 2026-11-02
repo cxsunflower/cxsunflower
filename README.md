@@ -5,35 +5,26 @@
 </p>
 
 <p align="center">
-  I'm a beginner programmer :rocket: 在代码的宇宙里慢慢探索
-</p>
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
-
-### :milky_way: 技术星系
-
-<p align="center">
-  <img src="assets/stack.svg" alt="Kotlin / Java / TypeScript / Python / Vue / Flutter 技术栈行星轨道" width="100%"/>
+  <img src="assets/panel.svg" alt="玩家资料与技术星系双栏面板" width="100%"/>
 </p>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=cxsunflower&show_icons=true&theme=radical" alt="GitHub stats" width="60%"/>
+  <a href="https://aur.archlinux.org/packages?K=sunflowercx&SeB=m"><img src="assets/btn-aur.svg" alt="Arch Linux AUR" height="44"/></a>
+  &nbsp;&nbsp;
+  <a href="AWESOME-STARS.md"><img src="assets/btn-stars.svg" alt="Starred projects" height="44"/></a>
 </p>
 
--   :package: [Arch Linux (AUR)](https://aur.archlinux.org/packages?K=sunflowercx&SeB=m)
--   :star: [Projects starred by me](AWESOME-STARS.md)
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
-
-### :snake: Activity // 贪吃蛇
+<p align="center">
+  <img src="assets/label-activity.svg" alt="Activity" width="100%"/>
+</p>
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/cxsunflower/cxsunflower/output/snake.svg" alt="贡献日历贪吃蛇" width="100%"/>
 </p>
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
-
-### :sparkles: [My followers](src/getTopFollowers.py)
+<p align="center">
+  <img src="assets/label-crew.svg" alt="Followers" width="100%"/>
+</p>
 
 <!--START_SECTION:top-followers-->
 <table>
@@ -63,30 +54,9 @@
 </table>
 <!--END_SECTION:top-followers-->
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
-
-### :bar_chart: [Coding time](https://github.com/muety/wakapi)
-
 <p align="center">
-  <img src="assets/waka.svg" alt="Coding time 像素统计" width="100%"/>
+  <img src="assets/waka.svg" alt="WakaTime 全时段编码统计" width="100%"/>
 </p>
-
-<details>
-<summary>纯文本版</summary>
-
-<!--START_SECTION:waka-->
-
-```txt
-Kotlin                 315 hrs               🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜   53.41 %
-C++                    61 hrs 25 mins        🟩🟩🟨⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜   10.41 %
-Markdown               50 hrs 31 mins        🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜   08.57 %
-Python                 24 hrs 58 mins        🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜   04.23 %
-XML                    23 hrs 41 mins        🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜   04.02 %
-```
-
-<!--END_SECTION:waka-->
-
-</details>
 
 <p align="center">
   <img src="assets/footer.svg" alt="END OF TRANSMISSION" width="100%"/>
