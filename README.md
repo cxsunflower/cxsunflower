@@ -36,7 +36,31 @@
 ### :sparkles: [My followers](src/getTopFollowers.py)
 
 <!--START_SECTION:top-followers-->
-<p align="center"><code>NO SIGNALS YET</code></p>
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/kpopdev">
+        <img src="https://avatars.githubusercontent.com/u/28566705?s=100" width="100" alt="kpopdev"/>
+      </a>
+      <br />
+      <a href="https://github.com/kpopdev">Kyla</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/tomellis712">
+        <img src="https://avatars.githubusercontent.com/u/319186118?s=100" width="100" alt="tomellis712"/>
+      </a>
+      <br />
+      <a href="https://github.com/tomellis712">Tom</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/GREEDY20NINE">
+        <img src="https://avatars.githubusercontent.com/u/155268546?s=100" width="100" alt="GREEDY20NINE"/>
+      </a>
+      <br />
+      <a href="https://github.com/GREEDY20NINE">GREEDY20NINE</a>
+    </td>
+  </tr>
+</table>
 <!--END_SECTION:top-followers-->
 
 <p align="center"><img src="assets/divider.svg" alt="" width="100%"/></p>
