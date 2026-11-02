@@ -402,23 +402,24 @@ def build_panel():
 
 
 def build_button(text, color, icon_name, stars=3):
-    W, H = 450, 80
+    # 极窄 GitHub 内容区仍须高于默认行高，避免图片下方留出白缝。
+    W, H = 450, 96
     left = icon_name == 'package'
-    body = [icon(icon_name, 32, 28, 3), path(text_rects(text, 72, 32, 2), WHITE),
-            icon('chevron-right', 394, 28, 3),
+    body = [icon(icon_name, 32, 36, 3), path(text_rects(text, 72, 40, 2), WHITE),
+            icon('chevron-right', 394, 36, 3),
             path([(2 if left else W - 4, 0, 2, H)], FRAME)]
     return svg_doc(W, H, text, ''.join(body))
 
 
 def build_label(text, color, icon_name):
-    W, H = 900, 80
-    body = [icon(icon_name, 32, 28, 3), path(text_rects(text, 72, 30, 3), color),
-            path(text_rects('CONTRIBUTIONS', 708, 34, 2), '#8f86e8'), side_frame(W, H)]
+    W, H = 900, 96
+    body = [icon(icon_name, 32, 36, 3), path(text_rects(text, 72, 38, 3), color),
+            path(text_rects('CONTRIBUTIONS', 708, 42, 2), '#8f86e8'), side_frame(W, H)]
     return svg_doc(W, H, text, ''.join(body))
 
 
 def build_footer():
-    W, H = 900, 80
+    W, H = 900, 96
     rng = random.Random(4242)
     msg = 'SEE YOU IN SPACE'
     body = [starfield(rng, W, H, 16, 6), ship_group(12, 20, 15),
