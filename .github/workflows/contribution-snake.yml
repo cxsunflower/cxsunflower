@@ -9,6 +9,7 @@ on:
       - master
     paths:
       - ".github/workflows/contribution-snake.yml"
+      - "scripts/style_snake.py"
 
 permissions:
   contents: write
@@ -22,6 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Generate contribution snake SVG
         uses: Platane/snk/svg-only@v3
         with:
@@ -31,9 +36,8 @@ jobs:
             dist/snake.svg?color_snake=#2ee6d6&color_dots=#1b1740,#3a2a8c,#6b3fd4,#9b5cf6,#ff5ccf
 
       - name: Add dark space background
-        run: |
-          sed -E -i 's|<svg[^>]*>|&<rect width="100%" height="100%" fill="#0b0a1f"/>|' dist/snake.svg
-          grep -q '#0b0a1f' dist/snake.svg
+        shell: pwsh
+        run: python scripts/style_snake.py dist/snake.svg
 
       - name: Publish SVG to output branch
         uses: peaceiris/actions-gh-pages@v4

@@ -3,6 +3,7 @@
 
 用法: python scripts/build_assets.py [输出目录]
 '''
+import json
 import random
 import sys
 from pathlib import Path
@@ -285,6 +286,43 @@ def frame(w, h):
             % (w - 4, h - 4, FRAME, path([(x, y, 10, 10) for x, y in corners], PINK)))
 
 
+def side_frame(w, h):
+    return path([(2, 0, 2, h), (w - 4, 0, 2, h)], FRAME)
+
+
+ICONS = {
+    'package': (('..KKKK..', '.KYYYYK.', 'KYYOYYYK', 'KYYYYYYK', 'KYYYYYYK', '.KYYYYK.', '..KKKK..'),
+                {'K': '#241b50', 'Y': YELLOW, 'O': '#ff9a5c'}),
+    'star': (('...Y...', '..YYY..', 'YYYYYYY', '.YYYYY.', '..YYY..', '.YY.YY.', 'Y.....Y'),
+             {'Y': YELLOW}),
+    'snake': (('..GGG.....', '.GG.GGG...', '.G...GG...', '.GGG.GG...', '...G.G....', '...GGG....'),
+              {'G': '#3ee08f'}),
+    'crew': (('..C...C...', '.CCC.CCC..', '.CCC.CCC..', '..C...C...', '.PPP.PPP..', '.PPP.PPP..'),
+             {'C': CYAN, 'P': PINK}),
+    'clock': (('..CCCC..', '.C....C.', 'C..WW..C', 'C..W...C', 'C..W...C', 'C..WW..C', '.C....C.', '..CCCC..'),
+              {'C': CYAN, 'W': WHITE}),
+    'signal': (('C.......', 'CC......', 'CCC.....', 'CCCC....', 'CCCCC...', 'CCCCCC..', 'CCCCCCC.'),
+               {'C': CYAN}),
+    'astronaut': (('..WWWW..', '.WKWWKW.', 'WWKWWKWW', 'WWCCCCWW', '.WCCCCW.', '..WWWW..', '..W..W..', '..W..W..'),
+                  {'W': WHITE, 'K': '#241b50', 'C': CYAN}),
+}
+
+
+def icon(name, x, y, cell):
+    aliases = {'package': 'box', 'crew': 'users'}
+    key = aliases.get(name, name)
+    if key in PIXEL_ICONS:
+        color = {'star': YELLOW, 'package': YELLOW, 'crew': CYAN,
+                 'clock': CYAN, 'signal': PINK}.get(name, CYAN)
+        shapes = ''.join("<path d='%s'/>" % d for d in PIXEL_ICONS[key])
+        return "<g transform='translate(%s %s) scale(%s)' fill='%s'>%s</g>" % (n(x), n(y), n(cell / 3), color, shapes)
+    grid, colors = ICONS[name]
+    return sprite(grid, cell, colors, x, y)
+
+
+PIXEL_ICONS = json.loads((Path(__file__).with_name('pixelarticons.json')).read_text(encoding='utf-8'))
+
+
 def svg_doc(w, h, label, body, css='', defs=''):
     defs_xml = '<defs>%s</defs>' % defs if defs else ''
     return ("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 %d %d' width='%d' height='%d' "
@@ -301,30 +339,24 @@ def ship_group(y, dur, delay):
 
 
 def build_hero():
-    W, H = 900, 300
+    W, H = 900, 220
     rng = random.Random(20261102)
-    title, sub, status = 'CXSUNFLOWER', 'BEGINNER PROGRAMMER // CODING', 'STATUS: ONLINE'
-    tx, sx, ux = (W - text_w(title, 8)) // 2, (W - text_w(sub, 3)) // 2, (W - text_w(status, 2)) // 2
-    t_svg, t_css = typed(title, tx, 64, 8, 'url(#gt)', 'a', 0.6, 0.2, 14, 12.6, shadow='#2a1a6e')
-    s_svg, s_css = typed(sub, sx, 142, 3, CYAN, 'b', 3.4, 0.07, 14, 12.6)
-    u_svg, u_css = typed(status, ux, 182, 2, PINK, 'c', 5.8, 0.05, 14, 12.6)
-    defs = ("<linearGradient id='gt' gradientUnits='userSpaceOnUse' x1='%d' y1='0' x2='%d' y2='0'>"
-            "<stop offset='0' stop-color='%s'/><stop offset='.5' stop-color='#c9a6ff'/><stop offset='1' stop-color='%s'/>"
-            "</linearGradient>" % (tx, tx + text_w(title, 8), CYAN, PINK))
-    body = [nebula(rng, 150, 200, PURPLE, 26), nebula(rng, 700, 230, PINK, 22), nebula(rng, 520, 40, CYAN, 16),
-            starfield(rng, W, H, 110, 46)]
-    for x, y, dur, delay in [(760, 10, 9, 0.5), (520, 0, 11, 4), (880, 70, 13, 7), (300, 0, 8, 9.5)]:
-        body.append(meteor(x, y, dur, delay))
-    body.append("<g transform='translate(790 96)'><g class='bob'>%s%s%s</g></g>"
-                % (path([(-72, -6, 144, 6)], mix(PINK, -0.35)), ''.join(disc_paths(5, 6, PURPLE)),
-                   path([(-54, 6, 108, 6)], PINK)))
-    body.append("<g transform='translate(95 215)'><g class='bob' style='animation-delay:-1.5s'>%s</g></g>"
-                % ''.join(disc_paths(3, 4, CYAN)))
-    body += [t_svg, s_svg, u_svg]
-    body.append("<rect class='cur' x='%d' y='142' width='9' height='21' fill='%s'/>" % (sx + text_w(sub, 3) + 6, CYAN))
-    body.append(ship_group(238, 24, 7))
-    body.append(frame(W, H))
-    return svg_doc(W, H, 'cxsunflower space pixel banner', ''.join(body), t_css + s_css + u_css, defs)
+    title = 'CXSUNFLOWER'
+    t_svg, t_css = typed(title, 40, 72, 8, 'url(#gt)', 'a', .2, .08, 18, 17, shadow='#2a1a6e')
+    defs = ("<linearGradient id='gt' x1='0' y1='0' x2='1' y2='0'>"
+            "<stop offset='0' stop-color='%s'/><stop offset='.5' stop-color='#c9a6ff'/>"
+            "<stop offset='1' stop-color='%s'/></linearGradient>" % (CYAN, PINK))
+    body = [nebula(rng, 760, 116, PURPLE, 18), starfield(rng, W, H, 38, 20),
+            path(text_rects('SPACE LOG // 001', 40, 28, 2), '#8f86e8'), t_svg,
+            path(text_rects('BEGINNER PROGRAMMER / EXPLORING CODE', 40, 150, 2), CYAN),
+            "<rect class='cur' x='454' y='150' width='6' height='14' fill='%s'/>" % CYAN,
+            meteor(800, 0, 11, -3), meteor(540, 0, 13, -8)]
+    body.append("<g transform='translate(758 100)'><g class='bob'>%s%s%s</g></g>"
+                % (path([(-72, -6, 144, 6)], mix(PINK, -0.35)), ''.join(disc_paths(6, 6, PURPLE)),
+                   path([(-60, 6, 120, 6)], PINK)))
+    body += [ship_group(184, 24, 17), side_frame(W, H),
+             path([(2, 0, W - 4, 4)], FRAME), path([(0, 0, 10, 10), (W - 10, 0, 10, 10)], PINK)]
+    return svg_doc(W, H, 'cxsunflower - space pixel poster', ''.join(body), t_css, defs)
 
 
 LANGS = [('Kotlin', '#a66bff'), ('Java', '#ff9a5c'), ('TypeScript', '#4aa8ff'),
@@ -340,87 +372,69 @@ ORBIT_CSS = (
 
 
 def build_panel():
-    W, H = 900, 420
-    cx, cy = 710, 206
+    W, H = 900, 276
+    cx, cy = 684, 128
     rng = random.Random(2027)
-    body = [starfield(rng, W, H, 70, 18), nebula(rng, 680, 210, PURPLE, 16),
-            path(text_rects('PLAYER PROFILE', 28, 22, 4), CYAN),
-            path(text_rects('TECH GALAXY', 634, 24, 3), PINK),
-            path([(520, 68, 2, H - 96)], FRAME)]
-
-    body.append(path(text_rects('CXSUNFLOWER', 32, 78, 5), WHITE))
-    body.append(path(text_rects('BEGINNER PROGRAMMER', 32, 132, 2), CYAN))
-    body.append(path([(32, 158, 448, 2)], FRAME))
-    rows = ['KOTLIN / JAVA / TYPESCRIPT', 'PYTHON / VUE / FLUTTER',
-            'ARCH LINUX AUR', 'OPEN SOURCE / CODING']
-    for i, line in enumerate(rows):
-        y = 178 + i * 30
-        body.append("<g transform='translate(42 %d)'>%s</g>" % (y + 7, ''.join(disc_paths(2, 2, [PURPLE, YELLOW, CYAN, PINK][i]))))
-        body.append(path(text_rects(line, 62, y, 2), WHITE))
-    body.append("<rect class='t1' x='34' y='326' width='8' height='8' fill='%s'/>" % PINK)
-    body.append(path(text_rects('STATUS // ONLINE', 52, 322, 2), PINK))
-    body.append(path(text_rects('GITHUB // CXSUNFLOWER', 34, 354, 2), '#8f86e8'))
-
+    body = [starfield(rng, W, H, 22, 10), icon('code', 32, 22, 3),
+            path(text_rects('PLAYER NOTES', 68, 24, 3), CYAN),
+            icon('star', 526, 22, 3), path(text_rects('TECH GALAXY', 562, 24, 3), PINK),
+            path([(486, 24, 2, 224)], FRAME)]
+    for i, line in enumerate(['LEARN. BUILD. EXPLORE.', 'OPEN SOURCE / SIDE QUESTS', 'ONE PIXEL AT A TIME.']):
+        body.append(path(text_rects(line, 32, 80 + i * 36, 2), WHITE if i == 0 else '#aaa2d6'))
+    body += [icon('astronaut', 32, 210, 4),
+             path(text_rects('PLAYER 01 / CXSUNFLOWER', 80, 222, 2), '#8f86e8')]
     for i in range(len(LANGS)):
-        body.append("<ellipse cx='%d' cy='%d' rx='%d' ry='%d' fill='none' stroke='%s' stroke-width='2' stroke-dasharray='6 6'/>"
-                    % (cx, cy, 78 + i * 20, 24 + i * 8, DIM))
-    body.append("<g transform='translate(%d %d)'><rect class='halo' x='-26' y='-26' width='52' height='52' fill='none' stroke='%s' stroke-width='2'/>%s</g>"
-                % (cx, cy, PINK, ''.join(disc_paths(4, 3, YELLOW))))
+        body.append("<ellipse cx='%d' cy='%d' rx='%d' ry='%d' fill='none' stroke='%s' stroke-width='2' stroke-dasharray='4 8'/>"
+                    % (cx, cy, 64 + i * 20, 16 + i * 7, DIM))
+    body.append("<g transform='translate(%d %d)'>%s</g>" % (cx, cy, ''.join(disc_paths(4, 3, YELLOW))))
     for i, (name, color) in enumerate(LANGS):
-        rx, ry = 78 + i * 20, 24 + i * 8
-        dur = (12 + i * 4) / 2.0
-        off = i * 2.9
+        rx, ry, dur, off = 64 + i * 20, 16 + i * 7, 6 + i * 2, i * 2.9
         body.append("<g transform='translate(%d %d)'><g class='ox' style='--rx:%dpx;animation-duration:%ss;animation-delay:-%ss'>"
                     "<g class='oy' style='--ry:%dpx;animation-duration:%ss;animation-delay:-%ss'>%s</g></g></g>"
-                    % (cx, cy, rx, n(dur), n(round(off, 2)), ry, n(dur), n(round(off + dur / 2, 2)),
-                       ''.join(disc_paths(3 if i % 2 == 0 else 2, 2, color))))
+                    % (cx, cy, rx, n(dur), n(off), ry, n(dur), n(off + dur / 2), ''.join(disc_paths(3, 2, color))))
     for i, (name, color) in enumerate(LANGS):
         col, row = i % 2, i // 2
-        x, y = 552 + col * 148, 330 + row * 26
-        body.append("<g transform='translate(%d %d)'>%s</g>" % (x + 5, y + 6, ''.join(disc_paths(2, 2, color))))
+        x, y = 534 + col * 174, 202 + row * 22
+        body.append(path([(x, y + 3, 8, 8)], color))
         body.append(path(text_rects(name.upper(), x + 18, y, 2), WHITE))
-    body.append(frame(W, H))
-    return svg_doc(W, H, 'Player profile and tech galaxy panel', ''.join(body), ORBIT_CSS)
+    body.append(side_frame(W, H))
+    return svg_doc(W, H, 'Player notes and tech galaxy - two panels', ''.join(body), ORBIT_CSS)
 
 
-def build_button(text, color, stars=3):
-    W, H = 260, 56
-    rng = random.Random(stars * 97 + len(text))
-    body = [starfield(rng, W, H, 14, 6),
-            "<g transform='translate(24 22)'>%s</g>" % ''.join(disc_paths(3, 2, color)),
-            path(text_rects(text, 48, 18, 2), WHITE),
-            path([(48, 38, text_w(text, 2), 2)], FRAME),
-            frame(W, H)]
+def build_button(text, color, icon_name, stars=3):
+    W, H = 450, 80
+    left = icon_name == 'package'
+    body = [icon(icon_name, 32, 28, 3), path(text_rects(text, 72, 32, 2), WHITE),
+            icon('chevron-right', 394, 28, 3),
+            path([(2 if left else W - 4, 0, 2, H)], FRAME)]
     return svg_doc(W, H, text, ''.join(body))
 
 
-def build_label(text, color=CYAN):
-    W, H = 900, 46
-    rng = random.Random(len(text) * 31)
-    body = [starfield(rng, W, H, 16, 6), path(text_rects(text, 28, 8, 3), color)]
+def build_label(text, color, icon_name):
+    W, H = 900, 80
+    body = [icon(icon_name, 32, 28, 3), path(text_rects(text, 72, 30, 3), color),
+            path(text_rects('CONTRIBUTIONS', 708, 34, 2), '#8f86e8'), side_frame(W, H)]
     return svg_doc(W, H, text, ''.join(body))
 
 
 def build_footer():
-    W, H = 900, 90
+    W, H = 900, 80
     rng = random.Random(4242)
-    msg = 'END OF TRANSMISSION // SEE YOU IN SPACE'
-    mx = (W - text_w(msg, 2)) // 2
-    body = [starfield(rng, W, H, 40, 14), ship_group(10, 16, 4),
-            path(text_rects(msg, mx, 54, 2), '#8f86e8'),
-            "<rect class='cur' x='%d' y='54' width='6' height='14' fill='%s'/>" % (mx + text_w(msg, 2) + 6, PINK),
-            frame(W, H)]
-    return svg_doc(W, H, 'end of transmission', ''.join(body))
+    msg = 'SEE YOU IN SPACE'
+    body = [starfield(rng, W, H, 16, 6), ship_group(12, 20, 15),
+            path(text_rects(msg, 32, 28, 2), '#8f86e8'), side_frame(W, H),
+            path([(2, H - 4, W - 4, 4)], FRAME),
+            path([(0, H - 10, 10, 10), (W - 10, H - 10, 10, 10)], PINK)]
+    return svg_doc(W, H, 'See you in space', ''.join(body))
 
 
 def main(argv):
     out = Path(argv[1]) if len(argv) > 1 else Path(__file__).resolve().parent.parent / 'assets'
     out.mkdir(parents=True, exist_ok=True)
     for name, svg in [('hero.svg', build_hero()), ('panel.svg', build_panel()),
-                      ('btn-aur.svg', build_button('ARCH LINUX AUR', YELLOW)),
-                      ('btn-stars.svg', build_button('STARRED PROJECTS', PURPLE)),
-                      ('label-activity.svg', build_label('ACTIVITY // SNAKE', PINK)),
-                      ('label-crew.svg', build_label('CREW // FOLLOWERS', CYAN)),
+                      ('btn-aur.svg', build_button('ARCH LINUX AUR', YELLOW, 'package')),
+                      ('btn-stars.svg', build_button('STARRED PROJECTS', PURPLE, 'star')),
+                      ('label-activity.svg', build_label('ACTIVITY // SNAKE', PINK, 'snake')),
                       ('footer.svg', build_footer())]:
         with open(out / name, 'w', encoding='utf-8', newline='\n') as fh:
             fh.write(svg)

@@ -32,8 +32,8 @@ COLORS = {'kotlin': ba.PURPLE, 'java': '#ff9a5c', 'c++': '#4aa8ff', 'typescript'
 PALETTE = [ba.PURPLE, ba.CYAN, ba.PINK, ba.YELLOW, '#3ee08f', '#4aa8ff', '#ff9a5c', '#c9a6ff']
 MAX_ROWS = 8
 BLOCKS = 26
-LIT_CSS = ('.lit{animation:lit 10s linear infinite;animation-fill-mode:backwards}'
-           '@keyframes lit{0%{opacity:.15}1%{opacity:1}90%{opacity:1}91%,100%{opacity:.15}}')
+LIT_CSS = ('.lit{animation:lit 8s ease-in-out infinite;animation-fill-mode:backwards}'
+           '@keyframes lit{0%,100%{opacity:.7}20%,80%{opacity:1}}')
 
 
 def clean_root(base):
@@ -119,47 +119,43 @@ def fmt_dur(secs):
 def render(langs, total, tracked, source):
     W = 900
     rows = langs[:MAX_ROWS]
-    H = max(460, 112 + max(len(rows), 1) * 52)
+    H = max(328, 82 + max(len(rows), 1) * 34)
     rng = random.Random(1999)
     body = [ba.starfield(rng, W, H, 34, 12),
-            ba.path(ba.text_rects('CODING TIME', 28, 22, 4), ba.CYAN),
-            ba.path(ba.text_rects('WAKATIME // ALL TIME', 320, 30, 2), '#8f86e8'),
-            ba.path([(24, 68, W - 48, 2)], ba.FRAME)]
+            ba.icon('clock', 28, 24, 3),
+            ba.path(ba.text_rects('CODING TIME', 68, 24, 3), ba.CYAN),
+            ba.path(ba.text_rects('ALL TIME', 470, 28, 2), '#8f86e8')]
 
     if not rows:
         msg = 'NO SIGNALS YET'
         body.append(ba.path(ba.text_rects(msg, (600 - ba.text_w(msg, 4)) // 2, 110, 4), '#8f86e8'))
-    max_pct = max((r[2] for r in rows), default=0.0)
     for i, (name, secs, pct) in enumerate(rows):
-        y0 = 86 + i * 52
+        y0 = 60 + i * 34
         color = COLORS.get(name.lower(), PALETTE[i % len(PALETTE)])
         body.append("<g transform='translate(46 %d)'>%s</g>"
                     % (y0 + 19, ''.join(ba.disc_paths(3, 3, color))))
-        body.append(ba.path(ba.text_rects(name.upper()[:12], 72, y0 + 12, 2), ba.WHITE))
+        label = name.upper() if len(name) <= 10 else name.upper()[:7] + '...'
+        body.append(ba.path(ba.text_rects(label, 72, y0 + 12, 2), ba.WHITE))
         base = [(196 + j * 11, y0 + 16, 9, 18) for j in range(BLOCKS)]
         body.append(ba.path(base, ba.DIM))
-        ratio = pct / max_pct if max_pct else 0.0
+        ratio = pct / 100.0
         filled = 0 if pct <= 0 else max(1, min(BLOCKS, int(round(ratio * BLOCKS))))
         for j in range(filled):
             body.append("<path class='lit' style='animation-delay:%ss' fill='%s' d='%s'/>"
                         % (ba.n(round(i * 0.08 + j * 0.03, 2)), color, ba.d_rects([base[j]])))
         body.append(ba.path(ba.text_rects('%.2f%%' % pct, 500, y0 + 18, 2), ba.WHITE))
 
-    px, py, pw = 604, 76, 272
-    body.append("<rect x='%d' y='%d' width='%d' height='%d' fill='none' stroke='%s' stroke-width='2'/>"
-                % (px, py, pw, H - 100, ba.FRAME))
-    body.append(ba.path(ba.text_rects('SIGNAL', 622, py + 18, 3), ba.PINK))
-    body.append(ba.path(ba.text_rects('ALL TIME', 622, py + 54, 2), '#8f86e8'))
-    body.append(ba.path(ba.text_rects(fmt_dur(total), 622, py + 76, 3), ba.WHITE))
-    body.append(ba.path(ba.text_rects('TOP LANGUAGE', 622, py + 122, 2), '#8f86e8'))
+    px, py = 604, 24
+    body.append(ba.path([(px, py, 2, H - 48)], ba.FRAME))
+    body.append(ba.icon('signal', 628, py, 3))
+    body.append(ba.path(ba.text_rects('FLIGHT TIME', 664, py + 4, 2), ba.PINK))
+    body.append(ba.path(ba.text_rects(fmt_dur(total), 628, py + 52, 3), ba.WHITE))
+    body.append(ba.path(ba.text_rects('MOST USED', 628, py + 112, 2), '#8f86e8'))
     top = rows[0][0].upper()[:12] if rows else 'NONE'
-    body.append(ba.path(ba.text_rects(top, 622, py + 144, 3), ba.CYAN))
-    body.append(ba.path(ba.text_rects('TRACKED', 622, py + 190, 2), '#8f86e8'))
-    body.append(ba.path(ba.text_rects('%d TRACKED' % tracked, 622, py + 212, 2), ba.WHITE))
-    body.append(ba.path(ba.text_rects('SOURCE', 622, py + 258, 2), '#8f86e8'))
-    body.append(ba.path(ba.text_rects(source.upper(), 622, py + 280, 2), ba.WHITE))
-    body.append(ba.path(ba.text_rects('SYNC // ACTIONS', 622, H - 44, 2), '#8f86e8'))
-    body.append(ba.frame(W, H))
+    body.append(ba.path(ba.text_rects(top, 628, py + 136, 3), ba.CYAN))
+    body.append(ba.path(ba.text_rects('%d LANGUAGES' % tracked, 628, py + 196, 2), ba.WHITE))
+    body.append(ba.path(ba.text_rects('WAKATIME', 628, H - 32, 2), '#8f86e8'))
+    body.append(ba.side_frame(W, H))
 
     summary = 'Coding time %s: %s' % (fmt_dur(total), ', '.join('%s %.2f%%' % (r[0], r[2]) for r in rows) or 'no data')
     return ba.svg_doc(W, H, html.escape(summary, quote=True), ''.join(body), LIT_CSS)
