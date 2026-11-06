@@ -289,7 +289,7 @@ def render_terminal(st):
         col = (pk.LINE, pk.PURPLE3, pk.PURPLE2, pk.PURPLE, pk.PINK)[level]
         chart.append("<path class='%s' fill='%s' d='%s'/>" % (gt, col, d_rects([(cx0 + 1 + i * bw, cy0 + chh - h, bw - 1, h)])))
     chart.append(pk.text('peak %d/wk' % peak, cx0, cy0 + chh + 10, 2, pk.SOFT))
-    b.append(''.join(chart))
+    b.append(show(svg, line_t + 0.2, off, cycle, ''.join(chart)))
     b.append(pk.side_frame(W, H))
     return svg.render(b)
 
