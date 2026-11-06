@@ -14,11 +14,10 @@
    limitations under the License.
 
    cx 的修改：输出整幅像素风 assets/followers.svg；恢复 inactive/quota 过滤；
-   全部被过滤时回退到未过滤榜单；头像内嵌为 data URI，避免外部图片破坏海报。
+   全部被过滤时回退到未过滤榜单；头像以 24px 内嵌为 data URI 并按像素放大，避免外部图片破坏海报。
 """
 
 import base64
-import html
 import json
 import math
 import os
@@ -30,14 +29,15 @@ import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'scripts'))
-import build_assets as ba  # noqa: E402
+import pixelkit as pk  # noqa: E402
+from pixelkit import W, d_rects, n, path  # noqa: E402
 
 API = 'https://api.github.com/graphql'
 MAX_SHOWN = 21
 PER_ROW = 7
-CELL_W = 128
-ROW_H = 104
-HEADER = 64
+CARD_W, CARD_H, GAP = 104, 124, 8
+HEADER = 58
+AVATAR_PX = 24
 
 QUERY = '''
 query($login: String!, $cursor: String) {
@@ -153,13 +153,13 @@ def collect(handle, token):
 
 
 def display_name(name, login):
-    if name and all(c.upper() in ba.FONT for c in name):
+    if name and pk.ascii_only(name):
         return name
     return login
 
 
 def avatar_uri(uid):
-    url = 'https://avatars.githubusercontent.com/u/%s?s=64' % uid
+    url = 'https://avatars.githubusercontent.com/u/%s?s=%d' % (uid, AVATAR_PX)
     req = urllib.request.Request(url, headers={'User-Agent': 'cxsunflower-profile'})
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
@@ -171,46 +171,76 @@ def avatar_uri(uid):
         return None
 
 
+MEDALS = ((pk.SUN, pk.SUN_L, pk.SUN3), ('#c9d2ea', '#ffffff', '#7d86a8'), ('#e0915a', '#ffc28f', '#8a4a20'))
+PLACEHOLDER = ('..####..', '.######.', '.##..##.', '.##..##.', '.######.', '..####..', '.######.', '########')
+
+
+def crew_card(svg, x, y, i, login, name, uri):
+    '''带像素头像、徽章与全息扫光的船员卡。'''
+    face = (pk.PANEL, pk.PANEL2, pk.BG2) if i >= 3 else (pk.PANEL2, pk.mix(MEDALS[i][0], -0.35), pk.BG2)
+    out = [pk.bevel(x, y, CARD_W, CARD_H, *face)]
+    ax, ay = x + (CARD_W - 72) // 2, y + 10
+    out.append(path([(ax - 2, ay - 2, 76, 76)], pk.INK))
+    if uri:
+        out.append("<image x='%d' y='%d' width='72' height='72' href='%s' preserveAspectRatio='xMidYMid slice' "
+                   "image-rendering='optimizeSpeed' style='image-rendering:pixelated'/>" % (ax, ay, uri))
+    else:
+        out.append(path([(ax, ay, 72, 72)], pk.PURPLE3) + pk.sprite(PLACEHOLDER, {'#': pk.PURPLE}, 6, ax + 12, ay + 14))
+    clip = svg.uid('av')
+    svg.add_def("<clipPath id='%s'><rect x='%d' y='%d' width='72' height='72'/></clipPath>" % (clip, ax, ay))
+    band = [(ax - 48 + (72 - r) // 2 // 2 * 2, ay + r, 10, 2) for r in range(0, 72, 2)]
+    out.append("<g clip-path='url(#%s)'><path class='holo' style='animation-delay:-%ss' fill='%s' opacity='.35' d='%s'/></g>"
+               % (clip, n(round(i * 0.45, 2)), pk.SNOW, d_rects(band)))
+    label = display_name(name, login)
+    s = 2 if pk.text_w(label, 2) <= CARD_W - 12 else 1
+    label = pk.fit(label, s, CARD_W - 10)
+    out.append(pk.text(label, x + (CARD_W - pk.text_w(label, s)) // 2, y + 94 + (3 if s == 1 else 0), s, pk.WHITE, shadow=pk.INK))
+    if i < 3:
+        base, hi, lo = MEDALS[i]
+        rank = '#%d' % (i + 1)
+        out.append(pk.bevel(x - 6, y - 8, pk.text_w(rank, 2, 'b') + 12, 22, base, hi, lo) + pk.text(rank, x, y - 3, 2, pk.INK, 'b'))
+    return ''.join(out)
+
+
+def empty_card(x, y):
+    dash = []
+    for k in range(0, CARD_W, 8):
+        dash += [(x + k, y, 4, 2), (x + k, y + CARD_H - 2, 4, 2)]
+    for k in range(0, CARD_H, 8):
+        dash += [(x, y + k, 2, 4), (x + CARD_W - 2, y + k, 2, 4)]
+    return (path(dash, pk.LINE) + pk.text('?', x + (CARD_W - pk.text_w('?', 6, 'b')) // 2, y + 24, 6, pk.LINE, 'b') +
+            "<g class='blk' style='animation-duration:1.6s'>%s</g>" % pk.text('JOIN', x + (CARD_W - pk.text_w('JOIN', 2, 'b')) // 2, y + 94, 2, pk.PINK, 'b'))
+
+
 def render_svg(followers, avatars):
     shown = followers[:MAX_SHOWN]
     rows = max(1, math.ceil(len(shown) / PER_ROW))
-    W = 900
-    H = HEADER + rows * ROW_H + 12
-    rng = random.Random(404)
-    body = [ba.starfield(rng, W, H, 36, 12),
-            ba.icon('crew', 28, 12, 4),
-            ba.path(ba.text_rects('CREW // FOLLOWERS', 68, 14, 3), ba.CYAN),
-            ba.path(ba.text_rects('%d SIGNALS' % len(shown), W - 24 - ba.text_w('%d SIGNALS' % len(shown), 2), 20, 2), '#8f86e8')]
-
-    if not shown:
-        msg = 'NO SIGNALS YET'
-        body.append(ba.path(ba.text_rects(msg, (W - ba.text_w(msg, 4)) // 2, HEADER + 24, 4), '#8f86e8'))
-
-    palette = [ba.PURPLE, ba.CYAN, ba.PINK, ba.YELLOW, '#3ee08f', '#4aa8ff', '#ff9a5c']
-    for i, (_, login, uid, name) in enumerate(shown):
-        col, row = i % PER_ROW, i // PER_ROW
-        row_count = min(PER_ROW, len(shown) - row * PER_ROW)
-        cx = (W - row_count * CELL_W) // 2 + CELL_W // 2 + col * CELL_W
-        y = HEADER + row * ROW_H
-        body.append("<rect x='%d' y='%d' width='72' height='72' fill='none' stroke='%s' stroke-width='2'/>"
-                    % (cx - 36, y, ba.FRAME))
-        body.append(ba.path([(cx - 36, y, 6, 6), (cx + 30, y, 6, 6), (cx - 36, y + 66, 6, 6), (cx + 30, y + 66, 6, 6)], ba.PINK))
-        uri = avatars.get(login)
-        if uri:
-            body.append("<image x='%d' y='%d' width='64' height='64' href='%s' preserveAspectRatio='xMidYMid slice'/>"
-                        % (cx - 32, y + 4, html.escape(uri, quote=True)))
-        else:
-            body.append("<g transform='translate(%d %d)'>%s</g>"
-                        % (cx, y + 36, ''.join(ba.disc_paths(7, 4, palette[i % len(palette)]))))
-        label = display_name(name, login).upper()
-        scale = 2 if ba.text_w(label, 2) <= CELL_W - 8 else 1
-        if ba.text_w(label, scale) > CELL_W - 8:
-            label = label[:16] + '...'
-        body.append(ba.path(ba.text_rects(label, cx - ba.text_w(label, scale) // 2, y + 80, scale), ba.WHITE))
-
-    body.append(ba.side_frame(W, H))
+    if shown and len(shown) % PER_ROW == 0 and len(shown) < MAX_SHOWN:
+        rows += 1
+    H = HEADER + rows * (CARD_H + 14) + 14
     summary = 'Followers: ' + (', '.join(f[1] for f in shown) if shown else 'no signals yet')
-    return ba.svg_doc(W, H, html.escape(summary, quote=True), ''.join(body))
+    svg = pk.Svg(W, H, summary)
+    svg.css(pk.BLINK_CSS, pk.BOB_CSS,
+            '.holo{animation:holo 4s linear infinite}@keyframes holo{0%,60%{transform:translateX(0)}85%,100%{transform:translateX(130px)}}')
+    rng = random.Random(404)
+    b = [pk.starfield(svg, rng, (6, 2, W - 6, H - 2), 40, 14, 3)]
+    b.append(pk.icon('users', 28, 14, 24, pk.CYAN) + pk.text2('CREW', 62, 18, 3, pk.CYAN, pk.CYAN2))
+    count = '%d aboard' % len(shown) if shown else 'no signals yet'
+    b.append(pk.text(count, W - 28 - pk.text_w(count, 2), 24, 2, pk.MUTED))
+    b.append(path([(28, 48, W - 56, 2)], pk.LINE))
+    total = rows * PER_ROW
+    x0 = (W - (PER_ROW * CARD_W + (PER_ROW - 1) * GAP)) // 2
+    for k in range(total):
+        col, row = k % PER_ROW, k // PER_ROW
+        x, y = x0 + col * (CARD_W + GAP), HEADER + 12 + row * (CARD_H + 14)
+        if k < len(shown):
+            _, login, _, name = shown[k]
+            card = crew_card(svg, x, y, k, login, name, avatars.get(login))
+            b.append("<g class='bob' style='animation-duration:2.6s;animation-delay:-%ss'>%s</g>" % (n(round(k * 0.37 % 2.6, 2)), card))
+        else:
+            b.append(empty_card(x, y))
+    b.append(pk.side_frame(W, H))
+    return svg.render(b)
 
 
 def main(argv):
@@ -225,11 +255,11 @@ def main(argv):
             if uri:
                 avatars[login] = uri
     svg = render_svg(followers, avatars)
-    path = Path(out)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, 'w', encoding='utf-8', newline='\n') as fh:
+    target = Path(out)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with open(target, 'w', encoding='utf-8', newline='\n') as fh:
         fh.write(svg)
-    print('%s %d bytes, %d followers, %d avatars' % (path, len(svg.encode('utf-8')), len(followers), len(avatars)))
+    print('%s %d bytes, %d followers, %d avatars' % (target, len(svg.encode('utf-8')), len(followers), len(avatars)))
 
 
 if __name__ == '__main__':

@@ -1,0 +1,44 @@
+name: Profile Stats
+
+on:
+  schedule:
+    - cron: '30 19 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/githubStats.py'
+      - 'scripts/pixelkit.py'
+      - 'scripts/pixelarticons.json'
+      - '.github/workflows/profileStats.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-writes
+  cancel-in-progress: false
+
+jobs:
+  profile-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate terminal, AUR and mission log panels
+        env:
+          OWNER: ${{ github.repository_owner }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python src/githubStats.py "$OWNER" sunflowercx assets
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add assets/terminal.svg assets/aur.svg assets/log.svg
+          git diff --cached --quiet || git commit -m "Update profile stats"
+          git pull --rebase
+          git push

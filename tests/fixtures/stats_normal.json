@@ -1,0 +1,53 @@
+{
+  "now": "2026-11-06",
+  "user": {
+    "login": "tester",
+    "name": "Tester",
+    "location": "Shanghai",
+    "createdAt": "2020-06-24T10:34:07Z",
+    "followers": {"totalCount": 3},
+    "following": {"totalCount": 1},
+    "starredRepositories": {"totalCount": 30},
+    "repositories": {"totalCount": 4, "nodes": [
+      {"name": "a", "isFork": false, "stargazerCount": 12, "forkCount": 2, "primaryLanguage": {"name": "Kotlin"}},
+      {"name": "b", "isFork": false, "stargazerCount": 3, "forkCount": 0, "primaryLanguage": {"name": "Python"}},
+      {"name": "c", "isFork": false, "stargazerCount": 0, "forkCount": 0, "primaryLanguage": {"name": "Kotlin"}},
+      {"name": "d", "isFork": true, "stargazerCount": 99, "forkCount": 9, "primaryLanguage": {"name": "C"}}
+    ]},
+    "pullRequests": {"totalCount": 5},
+    "issues": {"totalCount": 2},
+    "repositoriesContributedTo": {"totalCount": 4},
+    "contributionsCollection": {
+      "totalCommitContributions": 40,
+      "contributionCalendar": {"totalContributions": 15, "weeks": [
+        {"contributionDays": [
+          {"date": "2026-10-25", "contributionCount": 0}, {"date": "2026-10-26", "contributionCount": 1},
+          {"date": "2026-10-27", "contributionCount": 2}, {"date": "2026-10-28", "contributionCount": 3},
+          {"date": "2026-10-29", "contributionCount": 0}, {"date": "2026-10-30", "contributionCount": 0},
+          {"date": "2026-10-31", "contributionCount": 1}]},
+        {"contributionDays": [
+          {"date": "2026-11-01", "contributionCount": 5}, {"date": "2026-11-02", "contributionCount": 0},
+          {"date": "2026-11-03", "contributionCount": 1}, {"date": "2026-11-04", "contributionCount": 1},
+          {"date": "2026-11-05", "contributionCount": 1}, {"date": "2026-11-06", "contributionCount": 0}]}
+      ]}
+    }
+  },
+  "events": [
+    {"type": "PushEvent", "repo": {"name": "tester/app"}, "created_at": "2026-11-05T09:00:00Z", "payload": {"ref": "refs/heads/main"}},
+    {"type": "PushEvent", "repo": {"name": "tester/app"}, "created_at": "2026-11-05T12:00:00Z", "payload": {"ref": "refs/heads/main"}},
+    {"type": "DeleteEvent", "repo": {"name": "tester/app"}, "created_at": "2026-11-05T13:00:00Z", "payload": {"ref": "old", "ref_type": "branch"}},
+    {"type": "WatchEvent", "repo": {"name": "someone/cool-lib"}, "created_at": "2026-11-04T08:00:00Z", "payload": {"action": "started"}},
+    {"type": "PullRequestEvent", "repo": {"name": "org/project"}, "created_at": "2026-11-03T08:00:00Z",
+     "payload": {"action": "closed", "number": 7, "pull_request": {"number": 7, "merged": true}}},
+    {"type": "CreateEvent", "repo": {"name": "tester/new-repo"}, "created_at": "2026-11-02T08:00:00Z", "payload": {"ref": null, "ref_type": "repository"}},
+    {"type": "IssuesEvent", "repo": {"name": "org/project"}, "created_at": "2026-11-01T08:00:00Z",
+     "payload": {"action": "opened", "issue": {"number": 12}}},
+    {"type": "PushEvent", "repo": {"name": "tester/app"}, "created_at": "2026-10-30T08:00:00Z", "payload": {"size": 3, "distinct_size": 3}}
+  ],
+  "aur": [
+    {"Name": "tiny-tool", "Version": "1.0-1", "NumVotes": 2, "Popularity": 0.01, "OutOfDate": 1700000000,
+     "LastModified": 1673831434, "Description": "开源小工具"},
+    {"Name": "consolas-font", "Version": "1.2-2", "NumVotes": 30, "Popularity": 0.000002, "OutOfDate": null,
+     "LastModified": 1598909071, "Description": "Consolas font"}
+  ]
+}

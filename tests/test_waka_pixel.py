@@ -58,6 +58,20 @@ class WakaPixel(unittest.TestCase):
         self.assertIn("shape-rendering='crispEdges'", svg)
         xml.dom.minidom.parseString(svg)
 
+    def test_optional_extras_and_empty_data(self):
+        payload = {'data': {'total_seconds': 7200, 'daily_average': 5400,
+                            'best_day': {'date': '2026-05-01T00:00:00Z', 'total_seconds': 9000},
+                            'languages': [{'name': 'Kotlin', 'total_seconds': 7200, 'percent': 100}]}}
+        extra = waka.extras(payload)
+        self.assertEqual(extra, {'daily': 5400.0, 'best': (9000.0, '2026-05-01')})
+        langs, total, tracked = waka.parse(payload)
+        svg = waka.render(langs, total, tracked, 'fixture', extra)
+        xml.dom.minidom.parseString(svg)
+        self.assertEqual(waka.extras({'data': {}}), {})
+        empty = waka.render([], 0, 0, 'fixture')
+        self.assertIn('no data', empty)
+        xml.dom.minidom.parseString(empty)
+
 
 if __name__ == '__main__':
     unittest.main()

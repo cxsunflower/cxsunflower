@@ -11,7 +11,6 @@
   WAKA_FIXTURE          指向 JSON 文件时跳过网络（仅测试）
 '''
 import base64
-import html
 import json
 import os
 import random
@@ -22,18 +21,16 @@ import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'scripts'))
-import build_assets as ba  # noqa: E402
+import pixelkit as pk  # noqa: E402
+from pixelkit import W, d_rects, n, path  # noqa: E402
 
-ba.FONT['#'] = (0x0A, 0x1F, 0x0A, 0x0A, 0x1F, 0x0A, 0x00)
-
-COLORS = {'kotlin': ba.PURPLE, 'java': '#ff9a5c', 'c++': '#4aa8ff', 'typescript': '#4aa8ff',
-          'python': ba.YELLOW, 'vue': '#3ee08f', 'flutter': ba.CYAN, 'dart': ba.CYAN,
-          'markdown': ba.CYAN, 'xml': ba.PINK, 'json': '#c9a6ff', 'rescript': '#ff7a9c'}
-PALETTE = [ba.PURPLE, ba.CYAN, ba.PINK, ba.YELLOW, '#3ee08f', '#4aa8ff', '#ff9a5c', '#c9a6ff']
+COLORS = {'kotlin': pk.PURPLE, 'java': pk.ORANGE, 'c++': pk.BLUE, 'c': pk.BLUE, 'typescript': '#5aa2ff',
+          'javascript': pk.SUN, 'python': pk.SUN, 'vue': pk.GREEN, 'flutter': pk.CYAN, 'dart': pk.CYAN,
+          'markdown': pk.CYAN, 'xml': pk.PINK, 'json': '#c9a6ff', 'rescript': '#ff7a9c', 'html': pk.ORANGE,
+          'css': pk.BLUE, 'shell': pk.LEAF, 'bash': pk.LEAF, 'go': pk.CYAN, 'rust': pk.ORANGE, 'yaml': pk.SOFT}
+PALETTE = [pk.PURPLE, pk.CYAN, pk.PINK, pk.SUN, pk.GREEN, pk.BLUE, pk.ORANGE, '#c9a6ff']
 MAX_ROWS = 8
-BLOCKS = 26
-LIT_CSS = ('.lit{animation:lit 8s ease-in-out infinite;animation-fill-mode:backwards}'
-           '@keyframes lit{0%,100%{opacity:.7}20%,80%{opacity:1}}')
+SEGS = 18
 
 
 def clean_root(base):
@@ -111,61 +108,120 @@ def parse(payload):
     return out, total, len(all_langs)
 
 
+def extras(payload):
+    '''可选的日均与最佳单日（不同套餐/接口可能缺失）。'''
+    data = payload.get('data', payload) or {}
+    out = {}
+    if data.get('daily_average'):
+        out['daily'] = float(data['daily_average'])
+    best = data.get('best_day') or {}
+    if best.get('total_seconds'):
+        out['best'] = (float(best['total_seconds']), str(best.get('date') or '')[:10])
+    return out
+
+
 def fmt_dur(secs):
     h, m = divmod(int(secs // 60), 60)
     return '%dH %02dM' % (h, m)
 
 
-def render(langs, total, tracked, source):
-    W = 900
-    rows = langs[:MAX_ROWS]
-    H = max(328, 82 + max(len(rows), 1) * 34)
-    rng = random.Random(1999)
-    body = [ba.starfield(rng, W, H, 34, 12),
-            ba.icon('clock', 28, 24, 3),
-            ba.path(ba.text_rects('CODING TIME', 68, 24, 3), ba.CYAN),
-            ba.path(ba.text_rects('ALL TIME', 470, 28, 2), '#8f86e8')]
+def disc(r):
+    return [(i, j) for j in range(-r, r) for i in range(-r, r) if (i + .5) ** 2 + (j + .5) ** 2 <= r * r]
 
+
+def planet_dot(cx, cy, color, r=3, c=2):
+    cells = disc(r)
+    lit = [(i, j) for i, j in cells if i + j < -r * 0.6]
+    dark = [(i, j) for i, j in cells if i + j > r * 0.4]
+    return (path(pk.cells_rects(cells, c, cx, cy), color) + path(pk.cells_rects(dark, c, cx, cy), pk.mix(color, -0.4)) +
+            path(pk.cells_rects(lit, c, cx, cy), pk.mix(color, 0.5)))
+
+
+def tile(x, y, w, h, label, accent):
+    return (pk.bevel(x, y, w, h, '#100d29', pk.INK, pk.LINE, pk.INK) + path([(x + 4, y + 4, 4, h - 8)], accent) +
+            pk.text(label, x + 16, y + 10, 2, pk.MUTED, 'b'))
+
+
+def render(langs, total, tracked, source, extra=None):
+    extra = extra or {}
+    rows = langs[:MAX_ROWS]
+    H = 392
+    summary = 'Coding time %s: %s' % (fmt_dur(total), ', '.join('%s %.2f%%' % (r[0], r[2]) for r in rows) or 'no data')
+    svg = pk.Svg(W, H, summary)
+    rng = random.Random(1999)
+    cycle = 12.0
+    b = [pk.starfield(svg, rng, (6, 2, W - 6, H - 2), 30, 10, 2)]
+    x, y, w, h = 24, 10, W - 48, H - 22
+    b.append(path([(x + 4, y + 4, w, h)], pk.INK) + pk.bevel(x, y, w, h, pk.PANEL, pk.PANEL2, pk.BG2))
+    b.append(pk.icon('clock', x + 20, y + 14, 24, pk.CYAN) + pk.text2('FLIGHT LOG', x + 52, y + 16, 3, pk.CYAN, pk.CYAN2))
+    tag = 'WAKATIME · ALL TIME'
+    b.append(pk.text(tag, x + w - 20 - pk.text_w(tag, 2), y + 22, 2, pk.MUTED))
+    b.append(path([(x + 16, y + 50, w - 32, 2)], pk.LINE))
+    colors = [COLORS.get(name.lower(), PALETTE[i % len(PALETTE)]) for i, (name, _, _) in enumerate(rows)]
     if not rows:
         msg = 'NO SIGNALS YET'
-        body.append(ba.path(ba.text_rects(msg, (600 - ba.text_w(msg, 4)) // 2, 110, 4), '#8f86e8'))
-    for i, (name, secs, pct) in enumerate(rows):
-        y0 = 60 + i * 34
-        color = COLORS.get(name.lower(), PALETTE[i % len(PALETTE)])
-        body.append("<g transform='translate(46 %d)'>%s</g>"
-                    % (y0 + 19, ''.join(ba.disc_paths(3, 3, color))))
-        label = name.upper() if len(name) <= 10 else name.upper()[:7] + '...'
-        body.append(ba.path(ba.text_rects(label, 72, y0 + 12, 2), ba.WHITE))
-        base = [(196 + j * 11, y0 + 16, 9, 18) for j in range(BLOCKS)]
-        body.append(ba.path(base, ba.DIM))
-        ratio = pct / 100.0
-        filled = 0 if pct <= 0 else max(1, min(BLOCKS, int(round(ratio * BLOCKS))))
-        for j in range(filled):
-            body.append("<path class='lit' style='animation-delay:%ss' fill='%s' d='%s'/>"
-                        % (ba.n(round(i * 0.08 + j * 0.03, 2)), color, ba.d_rects([base[j]])))
-        body.append(ba.path(ba.text_rects('%.2f%%' % pct, 500, y0 + 18, 2), ba.WHITE))
-
-    px, py = 604, 24
-    body.append(ba.path([(px, py, 2, H - 48)], ba.FRAME))
-    body.append(ba.icon('signal', 628, py, 3))
-    body.append(ba.path(ba.text_rects('FLIGHT TIME', 664, py + 4, 2), ba.PINK))
-    body.append(ba.path(ba.text_rects(fmt_dur(total), 628, py + 52, 3), ba.WHITE))
-    body.append(ba.path(ba.text_rects('MOST USED', 628, py + 112, 2), '#8f86e8'))
-    top = rows[0][0].upper()[:12] if rows else 'NONE'
-    body.append(ba.path(ba.text_rects(top, 628, py + 136, 3), ba.CYAN))
-    body.append(ba.path(ba.text_rects('%d LANGUAGES' % tracked, 628, py + 196, 2), ba.WHITE))
-    body.append(ba.path(ba.text_rects('WAKATIME', 628, H - 32, 2), '#8f86e8'))
-    body.append(ba.side_frame(W, H))
-
-    summary = 'Coding time %s: %s' % (fmt_dur(total), ', '.join('%s %.2f%%' % (r[0], r[2]) for r in rows) or 'no data')
-    return ba.svg_doc(W, H, html.escape(summary, quote=True), ''.join(body), LIT_CSS)
+        b.append(pk.text(msg, x + 40, y + 120, 3, pk.MUTED, 'b'))
+    bx, seg = x + 156, 10
+    top_pct = max([r[2] for r in rows] + [1e-9])
+    for i, ((name, secs, pct), color) in enumerate(zip(rows, colors)):
+        ry = y + 68 + i * 30
+        b.append(planet_dot(x + 30, ry + 7, color))
+        b.append(pk.text(pk.fit(name, 2, 106), x + 46, ry, 2, pk.WHITE, shadow=pk.INK))
+        b.append(path([(bx - 2, ry - 3, SEGS * seg + 2, 20)], pk.INK) + path([(bx + j * seg, ry - 1, seg - 2, 16) for j in range(SEGS)], pk.LINE))
+        lit = 0 if pct <= 0 else max(1, min(SEGS, int(round(pct / top_pct * SEGS))))
+        cells = [(bx + j * seg, ry - 1, seg - 2, 16) for j in range(lit)]
+        bar = path(cells, color) + path([(cx_, cy_, cw_, 4) for cx_, cy_, cw_, _ in cells], pk.mix(color, 0.45)) + \
+            path([(cx_, cy_ + 12, cw_, 4) for cx_, cy_, cw_, _ in cells], pk.mix(color, -0.3))
+        t0 = 0.4 + i * 0.12
+        clip = pk.reveal(svg, bx, ry - 3, lit * seg, 20, t0, 0.5, cycle, lit, cycle - 0.4)
+        b.append("<g%s>%s</g>" % (clip, bar))
+        b.append(pk.text('%.2f%%' % pct, bx + SEGS * seg + 10, ry, 2, color, 'b', shadow=pk.INK))
+        hours = '%dh' % int(secs // 3600) if secs >= 3600 else '%dm' % int(secs // 60)
+        b.append(pk.text(hours, bx + SEGS * seg + 104, ry, 2, pk.SOFT))
+    tx, tw = x + 530, w - 546
+    b.append(tile(tx, y + 64, tw, 86, 'TOTAL TIME', pk.CYAN))
+    hrs, mins = divmod(int(total // 60), 60)
+    b.append(pk.odometer(svg, str(hrs), tx + 18, y + 98, 5, pk.SNOW, 0.3, 1.6, cycle))
+    b.append(pk.text('h %02dm' % mins, tx + 18 + len(str(hrs)) * 35 + 4, y + 112, 3, pk.SOFT, 'b', shadow=pk.INK))
+    top = rows[0][0] if rows else 'None'
+    b.append(tile(tx, y + 158, tw, 58, 'MOST USED', colors[0] if rows else pk.LINE))
+    b.append((planet_dot(tx + 26, y + 194, colors[0]) if rows else '') +
+             pk.text(pk.fit(top, 3, tw - 60, 'b'), tx + 42, y + 186, 3, colors[0] if rows else pk.MUTED, 'b', shadow=pk.INK))
+    half = (tw - 8) // 2
+    b.append(tile(tx, y + 224, half, 58, 'LANGS', pk.PINK) + pk.text(str(tracked), tx + 16, y + 252, 3, pk.SNOW, 'b', shadow=pk.INK))
+    if 'daily' in extra:
+        label, value = 'DAILY', fmt_dur(extra['daily']).replace(' ', '').lower()
+    elif 'best' in extra:
+        label, value = 'BEST DAY', fmt_dur(extra['best'][0]).replace(' ', '').lower()
+    else:
+        label, value = 'TRACKED', 'ALL TIME'
+    b.append(tile(tx + half + 8, y + 224, tw - half - 8, 58, label, pk.SUN) +
+             pk.text(pk.fit(value, 2, tw - half - 32), tx + half + 24, y + 256, 2, pk.SNOW, shadow=pk.INK))
+    sy = y + h - 40
+    b.append(pk.text('SHARE', x + 20, sy - 2, 2, pk.MUTED, 'b'))
+    sx, sw = x + 96, w - 116
+    b.append(path([(sx - 2, sy - 4, sw + 4, 22)], pk.INK) + path([(sx, sy - 2, sw, 18)], pk.LINE))
+    pos = sx
+    for (name, secs, pct), color in zip(rows, colors):
+        width = int(round(sw * pct / 100.0) // 2 * 2)
+        if width <= 0:
+            continue
+        b.append(path([(pos, sy - 2, min(width, sx + sw - pos), 18)], color) + path([(pos, sy - 2, min(width, sx + sw - pos), 4)], pk.mix(color, 0.4)))
+        pos += width
+    clip = svg.uid('sh')
+    svg.add_def("<clipPath id='%s'><rect x='%d' y='%d' width='%d' height='18'/></clipPath>" % (clip, sx, sy - 2, sw))
+    svg.css('.sweep{animation:sweep 4s linear infinite}@keyframes sweep{0%%,30%%{transform:translateX(0)}70%%,100%%{transform:translateX(%dpx)}}' % (sw + 60))
+    b.append("<g clip-path='url(#%s)'><path class='sweep' fill='%s' opacity='.5' d='%s'/></g>"
+             % (clip, pk.SNOW, d_rects([(sx - 40 + k * 2, sy - 2 + k * 2, 12, 2) for k in range(9)])))
+    b.append(pk.side_frame(W, H))
+    return svg.render(b)
 
 
 def main(argv):
     out = Path(argv[1]) if len(argv) > 1 else Path(__file__).resolve().parent.parent / 'assets' / 'waka.svg'
     payload, source = fetch_stats()
     langs, total, tracked = parse(payload)
-    svg = render(langs, total, tracked, source)
+    svg = render(langs, total, tracked, source, extras(payload))
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, 'w', encoding='utf-8', newline='\n') as fh:
         fh.write(svg)

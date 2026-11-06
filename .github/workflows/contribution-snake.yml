@@ -10,6 +10,7 @@ on:
     paths:
       - ".github/workflows/contribution-snake.yml"
       - "scripts/style_snake.py"
+      - "scripts/pixelkit.py"
 
 permissions:
   contents: write
@@ -33,9 +34,9 @@ jobs:
           github_user_name: cxsunflower
           github_token: ${{ secrets.GITHUB_TOKEN }}
           outputs: |
-            dist/snake.svg?color_snake=#2ee6d6&color_dots=#1b1740,#3a2a8c,#6b3fd4,#9b5cf6,#ff5ccf
+            dist/snake.svg?color_snake=#ffe86b&color_dots=#191538,#3a2a8c,#6b3fd4,#a66bff,#ff5ccf
 
-      - name: Add dark space background
+      - name: Put the snake into the arcade screen
         shell: pwsh
         run: python scripts/style_snake.py dist/snake.svg
 
