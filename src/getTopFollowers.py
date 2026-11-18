@@ -14,7 +14,7 @@
    limitations under the License.
 
    cx 的修改：输出整幅像素风 assets/followers.svg；恢复 inactive/quota 过滤；
-   全部被过滤时回退到未过滤榜单；头像以 24px 内嵌为 data URI 并按像素放大，避免外部图片破坏海报。
+   全部被过滤时回退到未过滤榜单；头像以高清原图内嵌为 data URI。
 """
 
 import base64
@@ -30,14 +30,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'scripts'))
 import pixelkit as pk  # noqa: E402
-from pixelkit import W, d_rects, n, path  # noqa: E402
+from pixelkit import W, n, path  # noqa: E402
 
 API = 'https://api.github.com/graphql'
 MAX_SHOWN = 21
 PER_ROW = 7
 CARD_W, CARD_H, GAP = 104, 124, 8
 HEADER = 58
-AVATAR_PX = 24
+AVATAR_PX = 144
 
 QUERY = '''
 query($login: String!, $cursor: String) {
@@ -172,25 +172,28 @@ def avatar_uri(uid):
 
 
 MEDALS = ((pk.SUN, pk.SUN_L, pk.SUN3), ('#c9d2ea', '#ffffff', '#7d86a8'), ('#e0915a', '#ffc28f', '#8a4a20'))
-PLACEHOLDER = ('..####..', '.######.', '.##..##.', '.##..##.', '.######.', '..####..', '.######.', '########')
 
 
 def crew_card(svg, x, y, i, login, name, uri):
-    '''带像素头像、徽章与全息扫光的船员卡。'''
+    '''带圆形原图头像与名次徽章的船员卡。'''
     face = (pk.PANEL, pk.PANEL2, pk.BG2) if i >= 3 else (pk.PANEL2, pk.mix(MEDALS[i][0], -0.35), pk.BG2)
     out = [pk.bevel(x, y, CARD_W, CARD_H, *face)]
     ax, ay = x + (CARD_W - 72) // 2, y + 10
-    out.append(path([(ax - 2, ay - 2, 76, 76)], pk.INK))
+    center_x, center_y = ax + 36, ay + 36
+    out.append("<circle cx='%d' cy='%d' r='37' fill='%s' shape-rendering='geometricPrecision'/>"
+               % (center_x, center_y, pk.INK))
     if uri:
+        clip = svg.uid('av')
+        svg.add_def("<clipPath id='%s'><circle cx='%d' cy='%d' r='36' shape-rendering='geometricPrecision'/></clipPath>"
+                    % (clip, center_x, center_y))
         out.append("<image x='%d' y='%d' width='72' height='72' href='%s' preserveAspectRatio='xMidYMid slice' "
-                   "image-rendering='optimizeSpeed' style='image-rendering:pixelated'/>" % (ax, ay, uri))
+                   "image-rendering='auto' shape-rendering='geometricPrecision' clip-path='url(#%s)'/>" % (ax, ay, uri, clip))
     else:
-        out.append(path([(ax, ay, 72, 72)], pk.PURPLE3) + pk.sprite(PLACEHOLDER, {'#': pk.PURPLE}, 6, ax + 12, ay + 14))
-    clip = svg.uid('av')
-    svg.add_def("<clipPath id='%s'><rect x='%d' y='%d' width='72' height='72'/></clipPath>" % (clip, ax, ay))
-    band = [(ax - 48 + (72 - r) // 2 // 2 * 2, ay + r, 10, 2) for r in range(0, 72, 2)]
-    out.append("<g clip-path='url(#%s)'><path class='holo' style='animation-delay:-%ss' fill='%s' opacity='.35' d='%s'/></g>"
-               % (clip, n(round(i * 0.45, 2)), pk.SNOW, d_rects(band)))
+        out.append("<g shape-rendering='geometricPrecision'><circle cx='%d' cy='%d' r='36' fill='%s'/>"
+                   "<circle cx='%d' cy='%d' r='10' fill='%s'/>"
+                   "<ellipse cx='%d' cy='%d' rx='18' ry='10' fill='%s'/></g>"
+                   % (center_x, center_y, pk.PURPLE3, center_x, center_y - 9, pk.PURPLE,
+                      center_x, center_y + 14, pk.PURPLE))
     label = display_name(name, login)
     s = 2 if pk.text_w(label, 2) <= CARD_W - 12 else 1
     label = pk.fit(label, s, CARD_W - 10)
@@ -220,8 +223,7 @@ def render_svg(followers, avatars):
     H = HEADER + rows * (CARD_H + 14) + 14
     summary = 'Followers: ' + (', '.join(f[1] for f in shown) if shown else 'no signals yet')
     svg = pk.Svg(W, H, summary)
-    svg.css(pk.BLINK_CSS, pk.BOB_CSS,
-            '.holo{animation:holo 4s linear infinite}@keyframes holo{0%,60%{transform:translateX(0)}85%,100%{transform:translateX(130px)}}')
+    svg.css(pk.BLINK_CSS, pk.BOB_CSS)
     rng = random.Random(404)
     b = [pk.starfield(svg, rng, (6, 2, W - 6, H - 2), 40, 14, 3)]
     b.append(pk.icon('users', 28, 14, 24, pk.CYAN) + pk.text2('CREW', 62, 18, 3, pk.CYAN, pk.CYAN2))

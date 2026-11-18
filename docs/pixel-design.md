@@ -11,7 +11,7 @@
 | 5 | `terminal.svg` / `aur.svg` | 终端（neofetch + yay） | 命令打字、逐行输出、色块、光标 |
 | 6 | `arcade.svg` + 贪吃蛇 | 街机灯箱与屏幕机框 | 跑马灯、投币提示、金色贪吃蛇 |
 | 7 | `log.svg` 任务日志 | HUD 时间线 | 逐行出现、扫描条 |
-| 8 | `followers.svg` 船员 | 像素头像卡 | 卡片浮动、空位 JOIN 闪烁 |
+| 8 | `followers.svg` 船员 | 像素卡片搭配圆形原图头像 | 卡片浮动、空位 JOIN 闪烁 |
 | 9 | `waka.svg` 飞行日志 | 仪表盘 | 能量条、里程表滚动、占比扫光 |
 | 10 | `footer.svg` 结尾 | 夜晚向日葵花田 | 花朵摇摆、萤火虫、火箭升空 |
 
@@ -31,7 +31,7 @@
 | 标题屏、玩家卡、背包、按钮、灯箱、结尾 | `scripts/build_assets.py` | 静态 | 修改后手动构建 |
 | 终端、AUR、任务日志 | `src/githubStats.py` | GitHub GraphQL、公开事件 REST、AUR RPC | `profileStats.yml` |
 | 飞行日志 | `src/wakaPixel.py` | WakaTime OAuth | `wakaPixel.yml` |
-| 船员 | `src/getTopFollowers.py` | GitHub GraphQL；头像以 24px 内嵌后像素化放大 | `topFollowers.yml` |
+| 船员 | `src/getTopFollowers.py` | GitHub GraphQL；头像下载 144px 原图，按 72px 平滑显示 | `topFollowers.yml` |
 | 贪吃蛇 | Platane/snk + `scripts/style_snake.py` | 贡献日历 | `contribution-snake.yml`，发布到 `output` 分支 |
 
 WakaTime 使用仓库 Actions Secret `WAKATIME_OAUTH_TOKEN`；GitHub 数据用 Actions 自带的 `GITHUB_TOKEN`。不要把凭据放进 README、SVG 或脚本。

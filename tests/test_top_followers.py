@@ -50,6 +50,20 @@ class TopFollowers(unittest.TestCase):
         self.assertIn('<image', followers.render_svg(out, {'user00': 'data:image/png;base64,AAAA'}))
         xml.dom.minidom.parseString(svg)
 
+    def test_avatar_keeps_original_image_with_smooth_round_crop(self):
+        uri = 'data:image/png;base64,AAAA'
+        svg = followers.render_svg([(1, 'user00', 1000, 'User')], {'user00': uri})
+        doc = xml.dom.minidom.parseString(svg)
+        image, = doc.getElementsByTagName('image')
+        self.assertEqual(image.getAttribute('href'), uri)
+        self.assertEqual(image.getAttribute('image-rendering'), 'auto')
+        self.assertNotIn('pixelated', svg)
+        self.assertNotIn('holo', svg)
+        clip, = doc.getElementsByTagName('clipPath')
+        self.assertEqual(image.getAttribute('clip-path'), 'url(#%s)' % clip.getAttribute('id'))
+        self.assertEqual(clip.getElementsByTagName('circle')[0].getAttribute('r'), '36')
+        self.assertGreaterEqual(followers.AVATAR_PX, 2 * int(image.getAttribute('width')))
+
     def test_many_filtered(self):
         inactive, quota = {3, 7, 12}, {5, 9}
         nodes = [node(i, following=5000 if i in quota else 0, active=i not in inactive) for i in range(30)]
