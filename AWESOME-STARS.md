@@ -90,6 +90,7 @@
 
 ## TypeScript 
 
+- [stablyai/orca](https://github.com/stablyai/orca) - Orca lets you run a fleet of bots with your own subscription (e.g. Claude Code, Grok, Agy, Codex). Available on desktop, mobile and remote runtime.
 - [dsy4567/4399-on-vscode](https://github.com/dsy4567/4399-on-vscode) - 在 VSCode 上玩 4399 小游戏, 帮助你劳逸结合, 提高开发效率(非 4399 官方开发的扩展)
 
 ## Vue 
